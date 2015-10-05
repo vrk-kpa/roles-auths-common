@@ -17,24 +17,19 @@ public class Logger {
 
     public enum Field {
         MSG("msg"),
-//        endUserId
+        ENDUSER("end_user"),
         AUTH("auth"), // (allowed/disallowed-tulos)
-//        principalcount (jos delegate-haku)
-//        reasons (jos määritelty serviceen)
-//        duration (kokonaiskesto)
-//        error (kuvaus virhetilanteesta)
-        DGDB("dgdb"), // (delegaatin syntymäpäivä)
-        DGNAME("dgname"), // (delegaatin nimi)
-        PRDB("prdb"), // (päämiehen syntymäaika)
-        PRNAME("prname"), // (päämiehen nimi)
-        PRS("prs"), // (lista delegaatin päämiehistä)
-//        auth (allowed/disallowed-tulos)
+        PRCOUNT("principal_count"), //  principalcount (jos delegate-haku)
+        DGDB("delegate_id"), // (delegaatin syntymäpäivä)
+        DGNAME("delegate_name"), // (delegaatin nimi)
+        PRDB("principal_id"), // (päämiehen syntymäaika)
+        PRNAME("principal_name"), // (päämiehen nimi)
+        PRS("principals"), // (lista delegaatin päämiehistä)
         REASONS("reasons"), // (jos määritelty serviceen)
-        DURATION("duration") // (kokonaiskesto)
-//        error (kuvaus virhetilanteesta)
+        DURATION("duration"), // (kokonaiskesto)
 //        type
-//        serviceIdentifier
-//        service
+        SERVICEREQUEST("service_request")
+//        SERVICE("service")
 //        changes
         ;
 
