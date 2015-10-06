@@ -16,19 +16,25 @@ public class Logger {
     }
 
     public enum Field {
-        MSG("msg"),
-        ENDUSER("end_user"),
+        ACTION("action"), // admin-ui action
         AUTH("auth"), // (allowed/disallowed-tulos)
-        PRCOUNT("principal_count"), //  principalcount (jos delegate-haku)
+        CHANGES("changes"), // admin-ui list of former changed values
         DGDB("delegate_id"), // (delegaatin syntymäpäivä)
         DGNAME("delegate_name"), // (delegaatin nimi)
+        DURATION("duration"), // (kokonaiskesto)
+        ENDUSER("end_user"),
+        ERROR("error"),
+        MSG("msg"),
+        PRCOUNT("principal_count"), //  principalcount (jos delegate-haku)
         PRDB("principal_id"), // (päämiehen syntymäaika)
         PRNAME("principal_name"), // (päämiehen nimi)
         PRS("principals"), // (lista delegaatin päämiehistä)
         REASONS("reasons"), // (jos määritelty serviceen)
-        DURATION("duration"), // (kokonaiskesto)
-//        type
-        SERVICEREQUEST("service_request")
+        SERVICE("service"), // admin-ui content of handled service 
+        SERVICEID("serviceIdentifier"), // admin-ui serviceIdentifier of handled service
+        SERVICEREQUEST("service_request"),
+        USER("user"), // admin-ui admin user that handles service
+        WARNING("warning")
 //        SERVICE("service")
 //        changes
         ;
@@ -112,13 +118,17 @@ public class Logger {
         return new LogMap(Level.ERROR, this);
     }
 
+    public boolean isDebugEnabled() {
+        return slf4jLogger.isDebugEnabled();
+    }
+
     public static String maskHetuEnding(String hetu) {
         if (hetu == null) {
             return hetu;
         }
         return hetu.replaceAll("(\\d{6})(-|A|\\+)\\d{3}.(?![A-Z0-9])", "$1$2XXXX");
     }
-
+    
     private String createMessage(String msg, Object... args) {
         String realMsg;
         if (args != null && args.length > 0) {
