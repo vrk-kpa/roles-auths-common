@@ -17,24 +17,24 @@ public class Logger {
 
     public enum Field {
         ACTION("action"), // admin-ui action
-        AUTH("auth"), // (allowed/disallowed-tulos)
+        AUTH("auth"), // allowed/disallowed-tulos
         CHANGES("changes"), // admin-ui list of former changed values
-        DGDB("delegate_id"), // (delegaatin syntymäpäivä)
-        DGNAME("delegate_name"), // (delegaatin nimi)
-        DURATION("duration"), // (kokonaiskesto)
-        ENDUSER("end_user"),
-        ERROR("error"),
-        MSG("msg"),
+        DGDB("delegate_id"), // delegaatin syntymäpäivä
+        DGNAME("delegate_name"), // delegaatin nimi
+        DURATION("duration"), // kokonaiskesto
+        ENDUSER("end_user"), // palvelun loppukäyttäjä
+        ERRORSTR("error"), // virheviesti
+        MSG("msg"), // yleinen viesti
         PRCOUNT("principal_count"), //  principalcount (jos delegate-haku)
-        PRDB("principal_id"), // (päämiehen syntymäaika)
-        PRNAME("principal_name"), // (päämiehen nimi)
-        PRS("principals"), // (lista delegaatin päämiehistä)
-        REASONS("reasons"), // (jos määritelty serviceen)
+        PRDB("principal_id"), // päämiehen syntymäaika
+        PRNAME("principal_name"), // päämiehen nimi
+        PRS("principals"), // lista delegaatin päämiehistä
+        REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
         SERVICE("service"), // admin-ui content of handled service 
         SERVICEID("serviceIdentifier"), // admin-ui serviceIdentifier of handled service
         SERVICEREQUEST("service_request"),
         USER("user"), // admin-ui admin user that handles service
-        WARNING("warning")
+        WARNINGSTR("warning") // varoitusviesti
 //        SERVICE("service")
 //        changes
         ;
