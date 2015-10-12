@@ -49,7 +49,7 @@ public class LogbackConfigurator {
         enc.setContext(lc);
 
         MaskingLogstashLayout layout = new MaskingLogstashLayout();
-        layout.setCustomFields("{\"service\":\"" + serviceName + "\", \"type\": \"application_log\"}");
+        layout.setCustomFields("{\""+Logger.Field.SERVICE+"\":\"" + serviceName + "\", \"\"+Logger.Field.TYPE+\"\": \"application_log\"}");
         layout.setContext(lc);
         layout.start();
         enc.setLayout(layout);

@@ -16,24 +16,25 @@ public class Logger {
     }
 
     public enum Field {
+        SERVICE("service"), // Name of logging application
+        TYPE("type"), // log type
         ACTION("action"), // admin-ui action
-        AUTH("auth"), // allowed/disallowed-tulos
+        AUTHORIZATION_RESULT("authorization_result"), // allowed/disallowed-tulos
         CHANGES("changes"), // admin-ui list of former changed values
-        DGDB("delegate_id"), // delegaatin syntymäpäivä
-        DGNAME("delegate_name"), // delegaatin nimi
+        DELEGATE_ID("delegate_id"), // delegaatin syntymäpäivä
+        DELEGATE_NAME("delegate_name"), // delegaatin nimi
         DURATION("duration"), // kokonaiskesto
-        ENDUSER("end_user"), // palvelun loppukäyttäjä
+        END_USER("end_user"), // palvelun loppukäyttäjä
         ERRORSTR("error"), // virheviesti
         MSG("msg"), // yleinen viesti
-        PRCOUNT("principal_count"), //  principalcount (jos delegate-haku)
-        PRDB("principal_id"), // päämiehen syntymäaika
-        PRNAME("principal_name"), // päämiehen nimi
-        PRS("principals"), // lista delegaatin päämiehistä
+        PRINCIPAL_COUNT("principal_count"), //  principalcount (jos delegate-haku)
+        PRINCIPAL_ID("principal_id"), // päämiehen syntymäaika
+        PRINCIPAL_NAME("principal_name"), // päämiehen nimi
+        PRINCIPAL_LIST("principal_list"), // lista delegaatin päämiehistä
         REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
-        SERVICE("service"), // admin-ui content of handled service 
-        SERVICEID("serviceIdentifier"), // admin-ui serviceIdentifier of handled service
-        SERVICEREQUEST("service_request"),
-        USER("user"), // admin-ui admin user that handles service
+        SERVICE_ID("xrd_service_id"), // xroad service id of calling service
+        SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
+        SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
         WARNINGSTR("warning") // varoitusviesti
 //        SERVICE("service")
 //        changes
@@ -72,7 +73,7 @@ public class Logger {
         return new LogMap(Level.DEBUG, this);
     }
 
-    public void info(String msg) {
+    private void info(String msg) {
         slf4jLogger.info(createMessage(msg));
     }
 
