@@ -31,6 +31,9 @@ public class Logger {
         PRINCIPAL_ID("principal_id"), // päämiehen syntymäaika
         PRINCIPAL_NAME("principal_name"), // päämiehen nimi
         PRINCIPAL_LIST("principal_list"), // lista delegaatin päämiehistä
+        ORGANIZATION_NAME("organization_name"),
+        ORGANIZATION_ID("organization_id"),
+        ORGANIZATION_ROLES("organization_roles"),
         REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
         SERVICE_ID("xrd_service_id"), // xroad service id of calling service
         SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
