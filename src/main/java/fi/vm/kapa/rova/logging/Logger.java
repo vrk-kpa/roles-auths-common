@@ -19,7 +19,7 @@ public class Logger {
         SERVICE("service"), // Name of logging application
         TYPE("type"), // log type
         ACTION("action"), // admin-ui action
-        AUTHORIZATION_RESULT("authorization_result"), // allowed/disallowed-tulos
+        RESULT("result"), // allowed/disallowed-tulos
         CHANGES("changes"), // admin-ui list of former changed values
         DELEGATE_ID("delegate_id"), // delegaatin syntymäpäivä
         DELEGATE_NAME("delegate_name"), // delegaatin nimi
