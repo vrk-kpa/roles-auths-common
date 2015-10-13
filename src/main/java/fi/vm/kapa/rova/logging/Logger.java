@@ -27,6 +27,7 @@ public class Logger {
         END_USER("end_user"), // palvelun loppukäyttäjä
         ERRORSTR("error"), // virheviesti
         MSG("msg"), // yleinen viesti
+        OPERATION("operation"),
         PRINCIPAL_COUNT("principal_count"), //  principalcount (jos delegate-haku)
         PRINCIPAL_ID("principal_id"), // päämiehen syntymäaika
         PRINCIPAL_NAME("principal_name"), // päämiehen nimi
