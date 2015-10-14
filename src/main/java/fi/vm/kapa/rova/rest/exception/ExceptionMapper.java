@@ -12,7 +12,7 @@ public class ExceptionMapper extends AbstractExceptionMapper<Exception> {
     @Override
     public Response toResponse(Exception e) {
         LOG.error("Unhandled Exception: ", e);
-        return getResponse(Response.Status.INTERNAL_SERVER_ERROR, e);
+        return getResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), e);
     }
 
 }

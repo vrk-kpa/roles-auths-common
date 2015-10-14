@@ -12,8 +12,8 @@ public class WebApplicationExceptionMapper extends AbstractExceptionMapper<WebAp
 
     @Override
     public Response toResponse(WebApplicationException e) {
-        LOG.error("WebApplicationException: ", e);
-        return getResponse(Response.Status.INTERNAL_SERVER_ERROR, e);
+        LOG.error("WebApplicationException: ("+req.getRequestURI()+") ", e);
+        return getResponse(e.getResponse().getStatus(), e);
     }
 
 }

@@ -16,7 +16,7 @@ public class SystemExceptionMapper extends AbstractExceptionMapper<SystemExcepti
     @Override
     public Response toResponse(SystemException e) {
         LOG.error("SystemException: " + e.toString());
-        return getResponse(Response.Status.INTERNAL_SERVER_ERROR, e);
+        return getResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), e);
     }
 
     @Override
