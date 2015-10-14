@@ -4,6 +4,9 @@ import fi.vm.kapa.rova.logging.MDCFilter;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +17,12 @@ public abstract class AbstractExceptionMapper<T extends Throwable> implements ja
 
     public abstract Response toResponse(T e);
 
-    public Response getResponse(Response.Status status, T e) {
+    @Context
+    protected HttpServletRequest req;
+
+    protected Response getResponse(int status, T e) {
         return Response.status(status)
+                .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(buildEntity(e))
                 .build();
     }
