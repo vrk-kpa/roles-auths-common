@@ -11,7 +11,7 @@ public class SystemException extends RuntimeException {
 
     private Map<Key, String> data = new HashMap<Key, String>();
 
-    public static enum Key {
+    public enum Key {
         FIELD, VALUE, MIN, MAX, DESCRIPTION
     }
 
