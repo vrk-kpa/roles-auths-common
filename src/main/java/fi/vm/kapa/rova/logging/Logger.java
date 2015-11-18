@@ -39,6 +39,7 @@ public class Logger {
         SERVICE_ID("xrd_service_id"), // xroad service id of calling service
         SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
         SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
+        TARGET_USER("target_user"),
         WARNINGSTR("warning") // varoitusviesti
 //        SERVICE("service")
 //        changes
