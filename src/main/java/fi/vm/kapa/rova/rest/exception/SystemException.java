@@ -36,6 +36,10 @@ public class SystemException extends RuntimeException {
         return exceptionType.toString();
     }
 
+    public String getMessage() {
+        return exceptionType.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("ExceptionType: ");
