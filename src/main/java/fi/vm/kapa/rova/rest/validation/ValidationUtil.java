@@ -1,5 +1,7 @@
 package fi.vm.kapa.rova.rest.validation;
 
+import fi.vm.kapa.rova.logging.Logger;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.client.ClientRequestContext;
@@ -7,14 +9,13 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.logging.Logger;
 
 public class ValidationUtil {
 
     public final static String HASH_HEADER_NAME = "X-RoVa-Hash";
     public final static String TIMESTAMP_HEADER_NAME = "X-RoVa-timestamp";
 
-    public static Logger LOG = Logger.getLogger(ValidationUtil.class.toString());
+    public static Logger LOG = Logger.getLogger(ValidationUtil.class);
 
     private final static String HMAC_ALGORITHM = "HmacSHA256";
     private String apiKey;
@@ -57,7 +58,7 @@ public class ValidationUtil {
             String hash = context.getHeaderString(HASH_HEADER_NAME);
             return matches(hash, data);
         } else {
-            LOG.info("Request rejected found request that was older than " + requestAliveMillis);
+            LOG.info("Request timestamp (%s) was older than %d", timestamp, requestAliveMillis);
             return false;
         }
     }
