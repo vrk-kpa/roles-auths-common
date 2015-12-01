@@ -10,6 +10,8 @@
     <properties>
         <io.spring.platform-version>1.1.1.RELEASE</io.spring.platform-version>
         <jersey.version>2.22.1</jersey.version>
+        <surefireArgLine/>
+        <skip.unit.tests/>
     </properties>
 
     <dependencyManagement>
@@ -30,7 +32,6 @@
                 <scope>import</scope>
             </dependency>
             <!-- /bom deps -->
-
 
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -57,18 +58,16 @@
             </dependency>
             <!-- /rova deps -->
 
-            <!-- ws-rt deps -->
             <dependency>
-                <groupId>org.glassfish.jersey</groupId>
-                <artifactId>jersey-bom</artifactId>
-                <version>${jersey.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.jvnet.jax-ws-commons.spring</groupId>
+                <artifactId>jaxws-spring</artifactId>
+                <version>1.9</version>
             </dependency>
+
+            <!-- ws-rt deps -->
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-rt</artifactId>
-                <version>2.2.10</version>
             </dependency>
             <dependency>
                 <groupId>javax.ws.rs</groupId>
@@ -79,7 +78,6 @@
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-jaxrs</artifactId>
-                <version>1.9.5</version>
             </dependency>
             <!-- /ws-rt deps -->
 
