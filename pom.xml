@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fi.vm.kapa.rova</groupId>
     <artifactId>roles-auths-parent</artifactId>
@@ -8,11 +8,14 @@
     <name>roles-auths-parent</name>
 
     <properties>
+        <rova.version>${project.version}</rova.version>
         <io.spring.platform-version>1.1.1.RELEASE</io.spring.platform-version>
+        <jersey.version>2.15</jersey.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- bom deps -->
             <dependency>
                 <groupId>io.spring.platform</groupId>
                 <artifactId>platform-bom</artifactId>
@@ -20,9 +23,79 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- /bom deps -->
+
+            <!-- rova deps -->
+            <dependency>
+                <groupId>fi.vm.kapa.rova</groupId>
+                <artifactId>roles-auths-common</artifactId>
+                <version>${rova.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fi.vm.kapa.rova</groupId>
+                <artifactId>roles-auths-vare-api</artifactId>
+                <version>${rova.version}</version>
+            </dependency>
+            <!-- /rova deps -->
+
+            <!-- ws-rt deps -->
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-rt</artifactId>
+                <version>2.2.10</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>2.0</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-jaxrs</artifactId>
+                <version>1.9.5</version>
+            </dependency>
+            <!-- /ws-rt deps -->
+
+            <!-- saml deps -->
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>2.6.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.extensions</groupId>
+                <artifactId>spring-security-saml2-core</artifactId>
+                <version>1.0.1.RELEASE</version>
+            </dependency>
+            <!-- /saml deps -->
+
+            <!-- Logging deps -->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>4.3</version>
+            </dependency>
+            <!-- /Logging deps -->
+
+            <!-- test deps -->
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <scope>test</scope>
+                <version>3.3.1</version>
+            </dependency>
+            <!-- /test deps -->
         </dependencies>
     </dependencyManagement>
     <modules>
-    	<module>common</module>
+        <module>common</module>
     </modules>
 </project>
