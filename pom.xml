@@ -8,7 +8,6 @@
     <name>roles-auths-parent</name>
 
     <properties>
-        <rova.version>${project.version}</rova.version>
         <io.spring.platform-version>1.1.1.RELEASE</io.spring.platform-version>
         <jersey.version>2.15</jersey.version>
     </properties>
@@ -37,12 +36,17 @@
             <dependency>
                 <groupId>fi.vm.kapa.rova</groupId>
                 <artifactId>roles-auths-common</artifactId>
-                <version>${rova.version}</version>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>fi.vm.kapa.rova</groupId>
                 <artifactId>roles-auths-vare-api</artifactId>
-                <version>${rova.version}</version>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>fi.vm.kapa.rova</groupId>
+                <artifactId>roles-auths-engine-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
             <!-- /rova deps -->
 
