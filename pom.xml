@@ -25,6 +25,14 @@
             </dependency>
             <!-- /bom deps -->
 
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- rova deps -->
             <dependency>
                 <groupId>fi.vm.kapa.rova</groupId>
@@ -83,6 +91,12 @@
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>4.3</version>
             </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-access</artifactId>
+                <version>1.1.3</version>
+            </dependency>
+
             <!-- /Logging deps -->
 
             <!-- test deps -->
@@ -93,6 +107,12 @@
                 <version>3.3.1</version>
             </dependency>
             <!-- /test deps -->
+
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>1.4.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
