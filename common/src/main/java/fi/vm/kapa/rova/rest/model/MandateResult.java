@@ -2,7 +2,7 @@ package fi.vm.kapa.rova.rest.model;
 
 public class MandateResult {
     boolean created;
-    long mandateId;
+    String uuid;
 
     public boolean isCreated() {
         return created;
@@ -12,11 +12,11 @@ public class MandateResult {
         this.created = created;
     }
 
-    public long getMandateId() {
-        return mandateId;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setMandateId(long mandateId) {
-        this.mandateId = mandateId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
