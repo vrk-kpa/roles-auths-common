@@ -26,6 +26,7 @@ public class Logger {
         DURATION("duration"), // kokonaiskesto
         END_USER("end_user"), // palvelun loppukäyttäjä
         ERRORSTR("error"), // virheviesti
+        ISSUES("issues"), // valtakirjan (mandaten) asia(t)
         MSG("msg"), // yleinen viesti
         OPERATION("operation"),
         PRINCIPAL_COUNT("principal_count"), //  principalcount (jos delegate-haku)
@@ -39,10 +40,9 @@ public class Logger {
         SERVICE_ID("xrd_service_id"), // xroad service id of calling service
         SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
         SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
+        SUBJECT("subject"), // valtakirjan (mandaten) tarkemmin yksilöivä tunniste
         TARGET_USER("target_user"),
         WARNINGSTR("warning") // varoitusviesti
-//        SERVICE("service")
-//        changes
         ;
 
         private String value;
