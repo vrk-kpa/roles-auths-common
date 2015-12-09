@@ -27,6 +27,7 @@ public class Logger {
         END_USER("end_user"), // palvelun loppukäyttäjä
         ERRORSTR("error"), // virheviesti
         ISSUES("issues"), // valtakirjan (mandaten) asia(t)
+        MANDATE_UUID("mandate_uuid"), // valtakirjan (mandaten) id
         MSG("msg"), // yleinen viesti
         OPERATION("operation"),
         PRINCIPAL_COUNT("principal_count"), //  principalcount (jos delegate-haku)
