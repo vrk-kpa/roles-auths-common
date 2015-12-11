@@ -9,6 +9,8 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import net.logstash.logback.appender.LogstashAccessTcpSocketAppender;
 import net.logstash.logback.appender.LogstashTcpSocketAppender;
+import net.logstash.logback.layout.LogstashAccessLayout;
+import net.logstash.logback.layout.LogstashLayout;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -48,7 +50,8 @@ public class LogbackConfigurator {
         LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
         enc.setContext(lc);
 
-        MaskingLogstashLayout layout = new MaskingLogstashLayout();
+
+        LogstashLayout layout = new LogstashLayout();
         layout.setCustomFields("{\""+Logger.Field.SERVICE+"\":\"" + serviceName + "\", \""+Logger.Field.TYPE+"\": \"application_log\"}");
         layout.setContext(lc);
         layout.start();
@@ -94,7 +97,7 @@ public class LogbackConfigurator {
         LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
         enc.setContext(lc);
 
-        MaskingLogstashAccessLayout layout = new MaskingLogstashAccessLayout();
+        LogstashAccessLayout layout = new LogstashAccessLayout();
         layout.setContext(lc);
         enc.setLayout(layout);
         layout.start();
