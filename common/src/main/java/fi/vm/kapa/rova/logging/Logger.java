@@ -129,13 +129,6 @@ public class Logger {
         return slf4jLogger.isDebugEnabled();
     }
 
-    public static String maskHetuEnding(String hetu) {
-        if (hetu == null) {
-            return hetu;
-        }
-        return hetu.replaceAll("(\\d{6})(-|A|\\+)\\d{3}.(?![A-Z0-9])", "$1$2XXXX");
-    }
-    
     private String createMessage(String msg, Object... args) {
         String realMsg;
         if (args != null && args.length > 0) {
@@ -143,7 +136,7 @@ public class Logger {
         } else {
             realMsg = msg;
         }
-        return maskHetuEnding(realMsg);
+        return realMsg;
     }
 
     public static class LogMap {
