@@ -9,6 +9,8 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import net.logstash.logback.appender.LogstashAccessTcpSocketAppender;
 import net.logstash.logback.appender.LogstashTcpSocketAppender;
+import net.logstash.logback.encoder.LogstashAccessEncoder;
+import net.logstash.logback.encoder.LogstashEncoder;
 import net.logstash.logback.layout.LogstashAccessLayout;
 import net.logstash.logback.layout.LogstashLayout;
 import org.slf4j.LoggerFactory;
@@ -47,15 +49,10 @@ public class LogbackConfigurator {
     @PostConstruct
     public void initLogging() throws Exception {
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
+
+        LogstashEncoder enc = new LogstashEncoder();
+        enc.setCustomFields("{\""+Logger.Field.SERVICE+"\":\"" + serviceName + "\", \""+Logger.Field.TYPE+"\": \"application_log\"}");
         enc.setContext(lc);
-
-
-        LogstashLayout layout = new LogstashLayout();
-        layout.setCustomFields("{\""+Logger.Field.SERVICE+"\":\"" + serviceName + "\", \""+Logger.Field.TYPE+"\": \"application_log\"}");
-        layout.setContext(lc);
-        layout.start();
-        enc.setLayout(layout);
 
         LogstashTcpSocketAppender logStashAppender = new LogstashTcpSocketAppender();
         logStashAppender.setRemoteHost(logstashHost);
@@ -65,13 +62,13 @@ public class LogbackConfigurator {
         logStashAppender.setName("logstash_application");
         logStashAppender.start();
 
-
         // ROOT LOGGER To use logstash
         ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
         logger.addAppender(logStashAppender);
         if (consoleLog) {
             logger.addAppender(new ConsoleAppender<>());
         }
+
         logger.setLevel(Level.toLevel(logLevel));
         logger.setAdditive(true); /* set to true if root should log too */
 
@@ -94,13 +91,12 @@ public class LogbackConfigurator {
 
     private Appender<IAccessEvent> getAccessLogAppender() {
         LoggerContext lc = (LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory();
-        LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
+
+        LogstashAccessEncoder enc = new LogstashAccessEncoder();
         enc.setContext(lc);
 
         LogstashAccessLayout layout = new LogstashAccessLayout();
         layout.setContext(lc);
-        enc.setLayout(layout);
-        layout.start();
 
         LogstashAccessTcpSocketAppender logStashAxsAppender = new LogstashAccessTcpSocketAppender();
         logStashAxsAppender.setRemoteHost(logstashHost);
