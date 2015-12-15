@@ -68,11 +68,9 @@ public class LogbackConfigurator {
         if (consoleLog) {
             logger.addAppender(new ConsoleAppender<>());
         }
-
         logger.setLevel(Level.toLevel(logLevel));
         logger.setAdditive(true); /* set to true if root should log too */
-
-    }
+   }
 
     public EmbeddedServletContainerCustomizer containerCustomizer(){
         return new EmbeddedServletContainerCustomizer() {
@@ -91,12 +89,12 @@ public class LogbackConfigurator {
 
     private Appender<IAccessEvent> getAccessLogAppender() {
         LoggerContext lc = (LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory();
-
-        LogstashAccessEncoder enc = new LogstashAccessEncoder();
+        LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
         enc.setContext(lc);
-
-        LogstashAccessLayout layout = new LogstashAccessLayout();
+        RovaLogstashAccessLayout layout = new RovaLogstashAccessLayout();
         layout.setContext(lc);
+        enc.setLayout(layout);
+        layout.start();
 
         LogstashAccessTcpSocketAppender logStashAxsAppender = new LogstashAccessTcpSocketAppender();
         logStashAxsAppender.setRemoteHost(logstashHost);
