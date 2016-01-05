@@ -9,13 +9,14 @@ public enum ExceptionType implements ErrorCode {
     DUPLICATE_RULESET_TYPE(105),
     NOT_AUTHORIZED(106),
     MATCHING_RULESET_NOT_FOUND(107),
+    ILLEGAL_RULE_CONFIG(108),
     OTHER_EXCEPTION(199);
+
+    int number;
 
     ExceptionType(int number) {
         this.number = number;
     }
-
-    int number;
 
     @Override
     public int getCodeNumber() {
