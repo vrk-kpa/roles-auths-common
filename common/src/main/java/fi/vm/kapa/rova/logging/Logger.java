@@ -16,10 +16,7 @@ public class Logger {
     }
 
     public enum Field {
-        SERVICE("service"), // Name of logging application
-        TYPE("type"), // log type
         ACTION("action"), // admin-ui action
-        RESULT("result"), // allowed/disallowed-tulos
         CHANGES("changes"), // admin-ui list of former changed values
         DELEGATE_ID("delegate_id"), // delegaatin syntymäpäivä
         DELEGATE_NAME("delegate_name"), // delegaatin nimi
@@ -38,11 +35,14 @@ public class Logger {
         ORGANIZATION_ID("organization_id"),
         ORGANIZATION_ROLES("organization_roles"),
         REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
+        RESULT("result"), // allowed/disallowed-tulos
+        SERVICE("service"), // Name of logging application
         SERVICE_ID("xrd_service_id"), // xroad service id of calling service
         SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
         SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
         SUBJECT("subject"), // valtakirjan (mandaten) tarkemmin yksilöivä tunniste
         TARGET_USER("target_user"),
+        TYPE("type"), // log type
         WARNINGSTR("warning") // varoitusviesti
         ;
 
