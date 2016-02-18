@@ -1,18 +1,37 @@
 package fi.vm.kapa.rova.health;
 
 import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.util.Properties;
 
-@Component
-public class GitActuator extends AbstractEndpoint {
+public class GitEndpoint extends AbstractEndpoint<GitEndpoint.GitRepositoryState> {
 
     private GitRepositoryState gitRepositoryState;
 
-    public GitActuator() {
+    public GitEndpoint() {
         super("git");
+    }
+
+    @Override
+    public boolean isEnabled() {
+        Environment env = getEnvironment();
+        Boolean enabled = env.getProperty("endpoints.git.enabled", Boolean.class);
+        if (enabled == null) {
+            return super.isEnabled();
+        }
+        return enabled;
+    }
+
+    @Override
+    public boolean isSensitive() {
+        Environment env = getEnvironment();
+        Boolean sensitive = env.getProperty("endpoints.git.sensitive", Boolean.class);
+        if (sensitive == null) {
+            return super.isSensitive();
+        }
+        return sensitive;
     }
 
     @Override
