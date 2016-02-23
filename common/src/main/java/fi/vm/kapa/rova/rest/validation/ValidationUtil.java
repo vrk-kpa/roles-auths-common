@@ -50,9 +50,19 @@ public class ValidationUtil {
      */
     public boolean handleContainerRequestContext(ContainerRequestContext context) throws IOException {
         String timestamp = context.getHeaderString(TIMESTAMP_HEADER_NAME);
+        String hash = context.getHeaderString(HASH_HEADER_NAME);
+
+        if (timestamp == null) {
+            LOG.info("Found request without proper timestamp header: " + TIMESTAMP_HEADER_NAME);
+            return false;
+        }
+        if (hash == null) {
+            LOG.info("Found request without proper hash header: " + HASH_HEADER_NAME);
+            return false;
+        }
+
         if (requestAlive(timestamp)) {
             String data = pathPrefix + "/" + context.getUriInfo().getPath() + timestamp;
-            String hash = context.getHeaderString(HASH_HEADER_NAME);
             return matches(hash, data, apiKey);
         } else {
             LOG.info("Request timestamp (%s) was older than %d", timestamp, requestAliveMillis);
