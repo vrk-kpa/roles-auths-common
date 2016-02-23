@@ -76,6 +76,30 @@ public class ValidationUtilTest {
     }
 
     @Test
+    public void testHandleContainerRequestContextNoTimestamp() throws Exception {
+        ContainerRequestContext crc = EasyMock.createMock(ContainerRequestContext.class);
+
+        EasyMock.expect(crc.getHeaderString(ValidationUtil.TIMESTAMP_HEADER_NAME)).andReturn(null).once();
+        EasyMock.replay(crc);
+        ValidationUtil vUtil = new ValidationUtil(TEST_KEY, 2, PREFIX);
+        assertFalse(vUtil.handleContainerRequestContext(crc));
+        EasyMock.verify(crc);
+    }
+
+    @Test
+    public void testHandleContainerRequestContextNoHash() throws Exception {
+        ContainerRequestContext crc = EasyMock.createMock(ContainerRequestContext.class);
+
+        EasyMock.expect(crc.getHeaderString(ValidationUtil.TIMESTAMP_HEADER_NAME)).andReturn("" + System.currentTimeMillis()).once();
+        EasyMock.expect(crc.getHeaderString(ValidationUtil.HASH_HEADER_NAME)).andReturn(null).once();
+        EasyMock.replay(crc);
+        ValidationUtil vUtil = new ValidationUtil(TEST_KEY, 2, PREFIX);
+        assertFalse(vUtil.handleContainerRequestContext(crc));
+        EasyMock.verify(crc);
+    }
+
+
+    @Test
     public void testHandleContainerRequestContextInvalidHash() throws Exception {
         ContainerRequestContext crc = EasyMock.createMock(ContainerRequestContext.class);
         UriInfo uInfo = EasyMock.createMock(UriInfo.class);
@@ -111,8 +135,7 @@ public class ValidationUtilTest {
         assertFalse(vUtil.handleContainerRequestContext(crc));
         EasyMock.verify(crc);
     }
-
-
+    
     private String getHash(String timestamp) throws IOException {
         return HashGenerator.hash(PREFIX + "/" + URL_INFO_PATH + timestamp, TEST_KEY);
     }
