@@ -129,13 +129,14 @@ public class ValidationUtilTest {
         long timestamp = System.currentTimeMillis() - 5000;
 
         EasyMock.expect(crc.getHeaderString(ValidationUtil.TIMESTAMP_HEADER_NAME)).andReturn("" + timestamp).once();
+        EasyMock.expect(crc.getHeaderString(ValidationUtil.HASH_HEADER_NAME)).andReturn("ANYHASH").once();
         EasyMock.replay(crc);
 
         ValidationUtil vUtil = new ValidationUtil(TEST_KEY, 2, PREFIX);
         assertFalse(vUtil.handleContainerRequestContext(crc));
         EasyMock.verify(crc);
     }
-    
+
     private String getHash(String timestamp) throws IOException {
         return HashGenerator.hash(PREFIX + "/" + URL_INFO_PATH + timestamp, TEST_KEY);
     }
