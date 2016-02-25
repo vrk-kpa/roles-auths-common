@@ -2,14 +2,22 @@ package fi.vm.kapa.rova.logging;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class Logger {
+
+    /**
+     * {@value} 
+     */
+    public static final int MAX_STACKTRACE_LENGTH = 30; 
 
     public enum Level {
         DEBUG, INFO, WARNING, ERROR
@@ -43,7 +51,8 @@ public class Logger {
         SUBJECT("subject"), // valtakirjan (mandaten) tarkemmin yksilöivä tunniste
         TARGET_USER("target_user"),
         TYPE("type"), // log type
-        WARNINGSTR("warning") // varoitusviesti
+        WARNINGSTR("warning"), // varoitusviesti
+        STACKTRACE("stacktrace")
         ;
 
         private String value;
@@ -69,64 +78,106 @@ public class Logger {
         return logger;
     }
 
-    public void debug(String msg, Object... args) {
-        if (slf4jLogger.isDebugEnabled()) {
-            slf4jLogger.debug(createMessage(msg, args));
-        }
-    }
-
     public LogMap debugMap() {
         return new LogMap(Level.DEBUG, this);
-    }
-
-    private void info(String msg) {
-        slf4jLogger.info(createMessage(msg));
-    }
-
-    public void info(String msg, Object... args) {
-        if (slf4jLogger.isInfoEnabled()) {
-            slf4jLogger.info(createMessage(msg, args));
-        }
     }
 
     public LogMap infoMap() {
         return new LogMap(Level.INFO, this);
     }
 
-    public void warning(String msg) {
-        slf4jLogger.warn(createMessage(msg));
-    }
-
-    public void warning(String msg, Object... args)  {
-        if (slf4jLogger.isWarnEnabled()) {
-            slf4jLogger.warn(createMessage(msg, args));
-        }
+    public LogMap errorMap() {
+        return new LogMap(Level.ERROR, this);
     }
 
     public LogMap warningMap() {
         return new LogMap(Level.WARNING, this);
     }
 
+    public void debug(String msg) {
+        debugMap().set(Field.MSG, msg).log();
+    }
+
+    public void info(String msg) {
+        infoMap().set(Field.MSG, msg).log();
+    }
+
+    public void warning(String msg) {
+        warningMap().set(Field.WARNINGSTR, msg).log();
+    }
+
     public void error(String msg) {
-        slf4jLogger.error(createMessage(msg));
+        errorMap().set(Field.ERRORSTR, msg).log();
+    }
+
+    public void debug(String msg, Object... args) {
+        if (slf4jLogger.isDebugEnabled()) {
+            String message = createMessage(msg, args);
+            debugMap().set(Field.MSG, message).log();
+        }
+    }
+
+    public void info(String msg, Object... args) {
+        if (slf4jLogger.isInfoEnabled()) {
+            String message = createMessage(msg, args);
+            infoMap().set(Field.MSG, message).log();
+        }
+    }
+
+    public void warning(String msg, Object... args)  {
+        if (slf4jLogger.isWarnEnabled()) {
+            String message = createMessage(msg, args);
+            warningMap().set(Field.WARNINGSTR, message).log();
+        }
     }
 
     public void error(String msg, Object... args) {
         if (slf4jLogger.isErrorEnabled()) {
-            slf4jLogger.error(createMessage(msg, args));
+            String message = createMessage(msg, args);
+            errorMap().set(Field.ERRORSTR, message).log();
         }
     }
 
     public void error(String msg, Exception e) {
-        slf4jLogger.error(msg, e);
-    }
-
-    public LogMap errorMap() {
-        return new LogMap(Level.ERROR, this);
+        String message = createMessage(msg);
+        String stackTrace = createStackTrace(e);
+        errorMap()
+            .set(Field.ERRORSTR, message)
+            .set(Field.STACKTRACE, stackTrace)
+            .log();
     }
 
     public boolean isDebugEnabled() {
         return slf4jLogger.isDebugEnabled();
+    }
+
+    private void logDebug(String msg) {
+        slf4jLogger.debug(msg);
+    }
+
+    private void logInfo(String msg) {
+        slf4jLogger.info(msg);
+    }
+
+    private void logWarning(String msg) {
+        slf4jLogger.warn(msg);
+    }
+
+    private void logError(String msg) {
+        slf4jLogger.error(msg);
+    }
+
+    public static String createStackTrace(Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        pw.flush();
+        String message = sw.toString();
+        String [] arr = message.split("\\n+");
+        String [] limited = Arrays.copyOf(arr,
+             ((MAX_STACKTRACE_LENGTH < arr.length) ? MAX_STACKTRACE_LENGTH : arr.length)
+        );
+        return String.join("\n", limited);
     }
 
     private String createMessage(String msg, Object... args) {
@@ -210,16 +261,16 @@ public class Logger {
             }
             switch (level) {
                 case DEBUG:
-                    logger.debug(logJson);
+                    logger.logDebug(logJson);
                     break;
                 case INFO:
-                    logger.info(logJson);
+                    logger.logInfo(logJson);
                     break;
                 case WARNING:
-                    logger.warning(logJson);
+                    logger.logWarning(logJson);
                     break;
                 case ERROR:
-                    logger.error(logJson);
+                    logger.logError(logJson);
                     break;
                 default:
                     throw new IllegalArgumentException("Level " + level + " is not recognized");

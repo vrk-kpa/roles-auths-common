@@ -12,8 +12,8 @@ public class LoggerTest {
     @Test
     public void testFormatted() {
         org.slf4j.Logger loggerMock = EasyMock.createMock(org.slf4j.Logger.class);
-        expect(loggerMock.isDebugEnabled()).andReturn(true);
-        loggerMock.debug("Hello, world!");
+        expect(loggerMock.isDebugEnabled()).andReturn(true).times(2);
+        loggerMock.debug("{\"" + Logger.Field.MSG + "\":\"Hello, world!\"}");
         expectLastCall().once();
         replay(loggerMock);
         Logger logger = Logger.getLogger(LoggerTest.class);
