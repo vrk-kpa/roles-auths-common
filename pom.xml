@@ -68,6 +68,11 @@
                 <artifactId>roles-auths-engine-api</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>fi.vm.kapa.rova</groupId>
+                <artifactId>roles-auths-wsdl</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
             <!-- /rova deps -->
 
             <dependency>
@@ -150,6 +155,7 @@
     </modules>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
