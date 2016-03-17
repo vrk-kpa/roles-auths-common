@@ -1,16 +1,17 @@
 package fi.vm.kapa.rova.logging;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import org.apache.commons.lang3.Validate;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+
+import org.apache.commons.lang3.Validate;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Logger {
 
@@ -45,8 +46,10 @@ public class Logger {
         REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
         RESULT("result"), // allowed/disallowed-tulos
         SERVICE("service"), // Name of logging application
+        SERVICE_UUID("service_uuid"), // service universally unique identifier
         SERVICE_ID("xrd_service_id"), // xroad service id of calling service
         SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
+        SERVICE_WEB_API_ID("web_api_service_id"), // service web api identifier
         SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
         SUBJECT("subject"), // valtakirjan (mandaten) tarkemmin yksilöivä tunniste
         TARGET_USER("target_user"),
