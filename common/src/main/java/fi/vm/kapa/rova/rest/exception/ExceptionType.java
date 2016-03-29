@@ -10,6 +10,7 @@ public enum ExceptionType implements ErrorCode {
     NOT_AUTHORIZED(106),
     MATCHING_RULESET_NOT_FOUND(107),
     ILLEGAL_RULE_CONFIG(108),
+    DUBLICATE_USER_IDENTITY(109),
     OTHER_EXCEPTION(199);
 
     int number;
