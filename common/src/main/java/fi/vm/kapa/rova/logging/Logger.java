@@ -1,17 +1,16 @@
 package fi.vm.kapa.rova.logging;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.Validate;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-
-import org.apache.commons.lang3.Validate;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Logger {
 
@@ -55,8 +54,8 @@ public class Logger {
         TARGET_USER("target_user"),
         TYPE("type"), // log type
         WARNINGSTR("warning"), // varoitusviesti
-        STACKTRACE("stacktrace")
-        ;
+        STACKTRACE("stacktrace"),
+        CLIENT_IP("client_ip");
 
         private String value;
         Field(String value) {
