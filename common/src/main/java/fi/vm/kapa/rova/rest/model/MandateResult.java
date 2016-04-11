@@ -1,16 +1,16 @@
 package fi.vm.kapa.rova.rest.model;
 
 public class MandateResult {
-    boolean created;
+    boolean success;
     String uuid;
 
-    public boolean isCreated() {
-        return created;
-    }
+	public boolean isSuccess() {
+		return success;
+	}
 
-    public void setCreated(boolean created) {
-        this.created = created;
-    }
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 
     public String getUuid() {
         return uuid;
