@@ -1,10 +1,12 @@
 package fi.vm.kapa.rova.rest.validation;
 
 import java.io.IOException;
+import java.net.URI;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 
 import fi.vm.kapa.rova.logging.Logger;
 
@@ -34,9 +36,16 @@ public class ValidationUtil {
     public boolean handleClientRequestContext(ClientRequestContext context) throws IOException {
         MultivaluedMap<String, Object> headers = context.getHeaders();
         String timestamp = "" + System.currentTimeMillis();
-        String data = context.getUri().getPath();
-        data = data + timestamp;
-        String hash = HashGenerator.hash(data, apiKey);
+        URI uri = context.getUri();
+        StringBuilder data = new StringBuilder();
+        data.append(uri.getPath());
+        String query = uri.getQuery();
+        if (query != null && query.length() > 0) {
+            data .append("?");
+            data.append(query);
+        }
+        data.append(timestamp);
+        String hash = HashGenerator.hash(data.toString(), apiKey);
         headers.putSingle(HASH_HEADER_NAME, hash);
         headers.putSingle(TIMESTAMP_HEADER_NAME, timestamp);
         return true;
@@ -62,7 +71,8 @@ public class ValidationUtil {
         }
 
         if (requestAlive(timestamp)) {
-            String data = pathPrefix + "/" + context.getUriInfo().getPath() + timestamp;
+            String path = getPathWithParams(context.getUriInfo());
+            String data = pathPrefix + "/" + path + timestamp;
             return matches(hash, data, apiKey);
         } else {
             LOG.info("Request timestamp (%s) was older than %d", timestamp, requestAliveMillis);
@@ -80,5 +90,12 @@ public class ValidationUtil {
         return hash.equals(HashGenerator.hash(data, apiKey));
     }
 
+    private String getPathWithParams(UriInfo uInfo) {
+        String uInfoPath = uInfo.getPath();
+        String absolutePath = uInfo.getAbsolutePath().toString();
+        String requestUri = uInfo.getRequestUri().toString();
+        String path = requestUri.substring(absolutePath.length() - uInfoPath.length());
+        return path;
+    }
 
 }
