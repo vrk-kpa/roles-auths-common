@@ -2,6 +2,8 @@ package fi.vm.kapa.rova.rest.validation;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -90,12 +92,13 @@ public class ValidationUtil {
         return hash.equals(HashGenerator.hash(data, apiKey));
     }
 
-    private String getPathWithParams(UriInfo uInfo) {
+    private String getPathWithParams(UriInfo uInfo) throws IOException {
         String uInfoPath = uInfo.getPath();
         String absolutePath = uInfo.getAbsolutePath().toString();
-        String requestUri = uInfo.getRequestUri().toString();
+        String requestUri = (URLDecoder.decode(uInfo.getRequestUri().toString(), Charset.defaultCharset().toString()));
         String path = requestUri.substring(absolutePath.length() - uInfoPath.length());
         return path;
+
     }
 
 }
