@@ -37,8 +37,8 @@ import java.io.IOException;
 @PreMatching
 public class RequestIdentificationFilter implements ClientRequestFilter {
 
-    public static final String XROAD_REQUEST_IDENTIFIER = "X-XRoad-request-id";
-    public static final String XROAD_END_USER = "X-XRoad-orig-userId";
+    public static final String ORIG_REQUEST_IDENTIFIER = "X-request-id";
+    public static final String ORIG_END_USER = "X-orig-userId";
 
     private String requestId;
     private String endUserId;
@@ -52,8 +52,8 @@ public class RequestIdentificationFilter implements ClientRequestFilter {
     
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        filter(XROAD_REQUEST_IDENTIFIER, requestContext, requestId);
-        filter(XROAD_END_USER, requestContext, endUserId);
+        filter(ORIG_REQUEST_IDENTIFIER, requestContext, requestId);
+        filter(ORIG_END_USER, requestContext, endUserId);
     }
 
     private void filter(String headerName, ClientRequestContext requestContext, String newValue) {
