@@ -191,6 +191,7 @@ public class Logger {
         slf4jLogger.error(msg);
     }
 
+    @SuppressWarnings("squid:S1148") // don't complain about printStackTrace()
     public static String createStackTrace(Exception e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
