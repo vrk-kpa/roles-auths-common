@@ -22,13 +22,17 @@
  */
 package fi.vm.kapa.rova.health;
 
-import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
-import org.springframework.core.env.Environment;
-
 import java.io.IOException;
 import java.util.Properties;
 
+import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
+import org.springframework.core.env.Environment;
+
+import fi.vm.kapa.rova.logging.Logger;
+
 public class GitEndpoint extends AbstractEndpoint<GitEndpoint.GitRepositoryState> {
+
+    private static Logger LOG = Logger.getLogger(GitEndpoint.class);
 
     private GitRepositoryState gitRepositoryState;
 
@@ -63,7 +67,7 @@ public class GitEndpoint extends AbstractEndpoint<GitEndpoint.GitRepositoryState
             try {
                 properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage(), e);
             }
 
             gitRepositoryState = new GitRepositoryState(properties);

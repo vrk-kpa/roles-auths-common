@@ -36,10 +36,10 @@ import fi.vm.kapa.rova.logging.Logger;
 
 public class ValidationUtil {
 
-    public final static String HASH_HEADER_NAME = "X-RoVa-Hash";
-    public final static String TIMESTAMP_HEADER_NAME = "X-RoVa-timestamp";
+    public static final String HASH_HEADER_NAME = "X-RoVa-Hash";
+    public static final String TIMESTAMP_HEADER_NAME = "X-RoVa-timestamp";
 
-    public static Logger LOG = Logger.getLogger(ValidationUtil.class);
+    private static final Logger LOG = Logger.getLogger(ValidationUtil.class);
     
     private String apiKey;
     private long requestAliveMillis;

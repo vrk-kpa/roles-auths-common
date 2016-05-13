@@ -27,11 +27,11 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class DateUtils {
-	public static final TimeZone FINNISH_TIMEZONE = TimeZone.getTimeZone("Europe/Helsinki");
-	
-	private DateUtils() {
-		
-	}
+    public static final TimeZone FINNISH_TIMEZONE = TimeZone.getTimeZone("Europe/Helsinki");
+    
+    private DateUtils() {
+        
+    }
     
     public static Date convertStartTime(Date date) {
         Calendar startCal = Calendar.getInstance();
@@ -54,5 +54,5 @@ public class DateUtils {
         endCal.set(Calendar.MILLISECOND, 0);
         return endCal.getTime();
     }
-	
+    
 }
