@@ -36,6 +36,8 @@ public class Person implements Evaluable {
     private String firstNames;
 
     private String lastName;
+    
+    private String nickName;
 
     private String birthdate;
 
@@ -95,6 +97,14 @@ public class Person implements Evaluable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+    public String getNickName() {
+        return nickName;
+    }
+    
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getBirthdate() {
