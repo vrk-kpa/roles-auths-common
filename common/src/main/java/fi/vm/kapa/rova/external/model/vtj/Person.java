@@ -37,7 +37,7 @@ public class Person implements Evaluable {
 
     private String lastName;
     
-    private String nickName;
+    private String callingName;
 
     private String birthdate;
 
@@ -99,12 +99,12 @@ public class Person implements Evaluable {
         this.lastName = lastName;
     }
     
-    public String getNickName() {
-        return nickName;
+    public String getCallingName() {
+        return callingName;
     }
     
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setCallingName(String callingName) {
+        this.callingName = callingName;
     }
 
     public String getBirthdate() {
