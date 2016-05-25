@@ -29,9 +29,9 @@ public class SystemException extends RuntimeException {
 
     private static final long serialVersionUID = 5666076931422150523L;
 
-    private ExceptionType exceptionType;
+    private final ExceptionType exceptionType;
 
-    private Map<Key, String> data = new HashMap<Key, String>();
+    private final Map<Key, String> data = new HashMap<>();
 
     public enum Key {
         FIELD, VALUE, MIN, MAX, DESCRIPTION

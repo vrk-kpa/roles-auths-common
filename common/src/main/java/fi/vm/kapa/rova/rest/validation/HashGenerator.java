@@ -22,11 +22,12 @@
  */
 package fi.vm.kapa.rova.rest.validation;
 
-import java.io.IOException;
-import java.util.Base64;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class HashGenerator {
 
@@ -51,10 +52,9 @@ public class HashGenerator {
             byte[] rawHmac = mac.doFinal(data.getBytes());
             String result = new String(Base64.getEncoder().encode(rawHmac));
             return result;
-        } catch (Exception e) {
-
+        } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalStateException e) {
+            throw new IOException("Cannot create hash", e);
         }
-        throw new IOException("Cannot create hash");
     }
 
 }
