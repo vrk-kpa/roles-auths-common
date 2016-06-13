@@ -71,6 +71,7 @@ public class Logger {
         SERVICE_ID("xrd_service_id"), // xroad service id of calling service
         SERVICE_IDENTIFIER("xrd_serviceIdentifier"), // admin-ui serviceIdentifier of handled service
         SERVICE_WEB_API_ID("web_api_service_id"), // service web api identifier
+        SERVICE_WEB_API_SESSION_ID("web_api_session_id"), // service web api identifier
         SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
         SUBJECT("subject"), // valtakirjan (mandaten) tarkemmin yksilöivä tunniste
         TARGET_USER("target_user"),
