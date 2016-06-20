@@ -43,7 +43,8 @@ public enum Channel {
         return t;
     }
     
-    public String toString(){
+    @Override
+    public String toString() {
         return name;
     }
 }
