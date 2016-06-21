@@ -29,6 +29,8 @@ public class SystemException extends RuntimeException {
 
     private static final long serialVersionUID = 5666076931422150523L;
 
+    public static final String MSG_FAIL = "operaatio.epaonnistui";
+
     private final ExceptionType exceptionType;
 
     private final Map<Key, String> data = new HashMap<>();
@@ -38,6 +40,11 @@ public class SystemException extends RuntimeException {
     }
 
     public SystemException(ExceptionType exceptionType) {
+        this.exceptionType = exceptionType;
+    }
+
+    public SystemException(Exception cause, ExceptionType exceptionType) {
+        super(cause);
         this.exceptionType = exceptionType;
     }
 
