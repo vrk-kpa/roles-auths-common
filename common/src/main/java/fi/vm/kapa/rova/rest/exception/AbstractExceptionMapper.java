@@ -37,6 +37,7 @@ import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
 
 public abstract class AbstractExceptionMapper<T extends Throwable> implements javax.ws.rs.ext.ExceptionMapper<T> {
 
+    @Override
     public abstract Response toResponse(T e);
 
     @Context
