@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.kapa.rova.rest.exception.ExceptionType;
 import fi.vm.kapa.rova.rest.exception.SystemException;
