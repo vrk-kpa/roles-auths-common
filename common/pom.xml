@@ -106,6 +106,7 @@
         <dependency>
             <groupId>org.springframework.security.extensions</groupId>
             <artifactId>spring-security-saml2-core</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
