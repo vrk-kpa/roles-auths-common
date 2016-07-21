@@ -103,26 +103,28 @@ public class LogbackConfigurator {
                     containerFactory.addContextValves(logbackAccessValve);
                 }
             }
+
+            private Appender<IAccessEvent> getAccessLogAppender() {
+                LoggerContext lc = (LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory();
+                LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
+                enc.setContext(lc);
+                RovaLogstashAccessLayout layout = new RovaLogstashAccessLayout();
+                layout.setContext(lc);
+                enc.setLayout(layout);
+                layout.start();
+
+                LogstashAccessTcpSocketAppender logStashAxsAppender = new LogstashAccessTcpSocketAppender();
+                logStashAxsAppender.setRemoteHost(logstashHost);
+                logStashAxsAppender.setPort(logstashPort);
+                logStashAxsAppender.setEncoder(enc);
+                logStashAxsAppender.setContext(lc);
+                logStashAxsAppender.setName("logstash_access");
+
+                logStashAxsAppender.start();
+                return logStashAxsAppender;
+            }
         };
     }
 
-    private Appender<IAccessEvent> getAccessLogAppender() {
-        LoggerContext lc = (LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory();
-        LayoutWrappingEncoder enc = new LayoutWrappingEncoder();
-        enc.setContext(lc);
-        RovaLogstashAccessLayout layout = new RovaLogstashAccessLayout();
-        layout.setContext(lc);
-        enc.setLayout(layout);
-        layout.start();
 
-        LogstashAccessTcpSocketAppender logStashAxsAppender = new LogstashAccessTcpSocketAppender();
-        logStashAxsAppender.setRemoteHost(logstashHost);
-        logStashAxsAppender.setPort(logstashPort);
-        logStashAxsAppender.setEncoder(enc);
-        logStashAxsAppender.setContext(lc);
-        logStashAxsAppender.setName("logstash_access");
-
-        logStashAxsAppender.start();
-        return logStashAxsAppender;
-    }
 }

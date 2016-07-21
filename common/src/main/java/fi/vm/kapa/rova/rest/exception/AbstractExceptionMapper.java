@@ -51,7 +51,7 @@ public abstract class AbstractExceptionMapper<T extends Throwable> implements ja
     }
 
     protected Map<String, Object> buildEntity(T e) {
-        HashMap<String, Object> entity = new HashMap<>(3);
+        Map<String, Object> entity = new HashMap<>(3);
         entity.put(REQUEST_ID, fetchRequestId());
         entity.put("errorMessage", e.getMessage());
         entity.put("errorCode", ExceptionType.OTHER_EXCEPTION.getCodeNumber());

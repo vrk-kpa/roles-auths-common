@@ -27,6 +27,7 @@ import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 public class GitEndpoint extends AbstractEndpoint<GitEndpoint.GitRepositoryState> {
@@ -97,7 +98,7 @@ public class GitEndpoint extends AbstractEndpoint<GitEndpoint.GitRepositoryState
         private final String buildHost;
         private final String buildVersion;
 
-        public GitRepositoryState(Properties properties) {
+        public GitRepositoryState(Map properties) {
             this.tags = String.valueOf(properties.get("git.tags"));
             this.branch = String.valueOf(properties.get("git.branch"));
             this.dirty = String.valueOf(properties.get("git.dirty"));

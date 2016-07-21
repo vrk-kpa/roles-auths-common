@@ -29,10 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class Logger {
 
@@ -217,7 +214,7 @@ public class Logger {
     }
 
     public static class LogMap {
-        private HashMap<String, Object> entries;
+        private Map<String, Object> entries;
         private Level level;
         private Logger logger;
         private ObjectMapper mapper;
@@ -249,7 +246,7 @@ public class Logger {
                 Collection coll = (Collection) oldValue;
                 coll.add(value);
             } else {
-                ArrayList<Object> newValue = new ArrayList<>();
+                List<Object> newValue = new ArrayList<>();
                 newValue.add(value);
                 newValue.add(oldValue);
                 entries.put(key, newValue);
