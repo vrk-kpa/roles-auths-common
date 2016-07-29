@@ -39,6 +39,7 @@
         <docker.image.tag>latest</docker.image.tag>
         <jersey.version>2.22.1</jersey.version>
         <cxf.version>3.1.6</cxf.version>
+
         <surefireArgLine/>
         <skip.unit.tests/>
     </properties>
@@ -212,6 +213,12 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>

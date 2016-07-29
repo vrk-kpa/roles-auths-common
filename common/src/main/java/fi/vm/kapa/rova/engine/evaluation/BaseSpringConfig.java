@@ -30,7 +30,8 @@ import org.springframework.context.annotation.PropertySources;
 
 @Configuration
 @PropertySources({
-        @PropertySource("classpath:/actuatorConfig.properties")
+        @PropertySource("classpath:/actuatorConfig.properties"),
+        @PropertySource(value = "classpath:version.properties", ignoreResourceNotFound = true)
 })
 public class BaseSpringConfig {
 
