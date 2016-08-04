@@ -65,7 +65,7 @@ public final class HetuUtils {
             return false;
         }
 
-        final String localHetu = hetu.trim();
+        final String localHetu = hetu;
 
         return isHetuFormatValid(localHetu) && isBirthDateValid(localHetu) && isChecksumCharacterValid(localHetu);
     }

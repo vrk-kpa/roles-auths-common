@@ -131,6 +131,27 @@ public class HetuUtilsTest {
         assertFalse(HetuUtils.isHetuValid(testHetu));
     }
 
+    @Test
+    public void hetuValidFailedSpacesTest() {
+        String testHetu = " 060887-298C "; // valid hetu but extra spaces
+        
+        assertFalse(HetuUtils.isHetuValid(testHetu));
+    }
+
+    @Test
+    public void hetuValidFailedCharacterTest() {
+        String testHetu = " 06O887-298C "; // invalid hetu with uppercase O instead of digit 0 
+        
+        assertFalse(HetuUtils.isHetuValid(testHetu));
+    }
+
+    @Test
+    public void hetuValidFailedCaseTest() {
+        String testHetu = " 060887-298c "; // invalid hetu wrong case c
+        
+        assertFalse(HetuUtils.isHetuValid(testHetu));
+    }
+
 
     // isMaleHetu & isFemaleHetu tests
 
