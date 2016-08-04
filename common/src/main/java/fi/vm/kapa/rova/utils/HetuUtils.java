@@ -32,17 +32,21 @@ public final class HetuUtils {
     private static final String CHECKSUM_CHARACTERS = "0123456789ABCDEFHJKLMNPRSTUVWXY";
     private static volatile Map<Integer, Character> separators = new HashMap<Integer, Character>();
     private static volatile Map<Character, Integer> invertedSeparators = new HashMap<Character, Integer>();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
 
     static {
         separators.put(18, '+');
         separators.put(19, '-');
         separators.put(20, 'A');
-        separators.put(21, 'B');
-        
+//        separators.put(21, 'B');
+
         invertedSeparators.put('+', 18);
         invertedSeparators.put('-', 19);
         invertedSeparators.put('A', 20);
-        invertedSeparators.put('B', 21);
+//        invertedSeparators.put('B', 21);
+
+        DATE_FORMAT.setLenient(false);
     }
 
     private HetuUtils() {
@@ -54,22 +58,37 @@ public final class HetuUtils {
      * Checks if a given Finnish National Identification Number is valid.
      *
      * @param hetu a Finnish National Identification Number to be validated, such as "040789-5863"
-     * @return
+     * @return true if the given hetu is totally formally valid
      */
     public static boolean isHetuValid(final String hetu) {
         if (StringUtils.isBlank(hetu)) {
             return false;
         }
 
-        final String localHetu = hetu.toUpperCase().trim();
+        final String localHetu = hetu.trim();
 
         return isHetuFormatValid(localHetu) && isBirthDateValid(localHetu) && isChecksumCharacterValid(localHetu);
     }
 
+    /**
+     * Checks if the format of a given Finnish National Identification Number is correct.
+     * Number of characters and their types are validated against a regular expression.
+     *
+     * @param hetu a Finnish National Identification Number to be validated, such as "040789-5863"
+     * @return true if the given hetu has correct format
+     */
     public static boolean isHetuFormatValid(final String hetu) {
         return hetu.matches("\\d{6}[+-AB]\\d{3}[0123456789ABCDEFHJKLMNPRSTUVWXY]");
     }
 
+    /**
+     * Checks if the birthday part of a given Finnish National Identification Number is valid.
+     * A java.text.SimpleDateFormat object is used in strict mode (lenient == false) for interpreting
+     * the birthday part of the given hetu.
+     *
+     * @param hetu a Finnish National Identification Number to be validated, such as "040789-5863"
+     * @return true if the given hetu has a valid birthday part
+     */
     public static boolean isBirthDateValid(final String hetu)  {
         try {
             final String fullLengthBirthDate = String.format("%d%s-%s-%s",
@@ -77,13 +96,19 @@ public final class HetuUtils {
                     StringUtils.substring(hetu, 4, 6),
                     StringUtils.substring(hetu, 2, 4),
                     StringUtils.substring(hetu, 0, 2));
-            new SimpleDateFormat("yyyy-MM-dd").parse(fullLengthBirthDate);
+            DATE_FORMAT.parse(fullLengthBirthDate);
             return true;
         } catch (final ParseException e) {
             return false;
         }
     }
 
+    /**
+     * Checks if the birthday part of a given Finnish National Identification Number is valid.
+     *
+     * @param hetu a Finnish National Identification Number to be validated, such as "040789-5863"
+     * @return true if the given hetu has a valid birthday part
+     */
     public static boolean isChecksumCharacterValid(final String hetu) {
         return getChecksumCharacter(hetu).charValue() == hetu.charAt(10);
     }
@@ -91,8 +116,8 @@ public final class HetuUtils {
     /**
      * Checks if given Finnish National Identification Number is for male.
      *
-     * @param hetu
-     * @return
+     * @param hetu a Finnish National Identification Number to be checked, such as "040789-5863"
+     * @return true if the given hetu formally belongs to a male citizen.
      */
     public static boolean isMaleHetu(final String hetu) {
         if (!isHetuValid(hetu)) {
@@ -105,13 +130,19 @@ public final class HetuUtils {
     /**
      * Checks if given Finnish National Identification Number is for female.
      *
-     * @param hetu
-     * @return
+     * @param hetu a Finnish National Identification Number to be checked, such as "040789-5863"
+     * @return true if the given hetu formally belongs to a female citizen.
      */
     public static boolean isFemaleHetu(final String hetu) {
         return !isMaleHetu(hetu);
     }
 
+    /**
+     * Masks the separator of a given hetu and characters thereafter with asterisks (*).
+     *
+     * @param hetu a Finnish National Identification Number to be masked, such as "040789-5863"
+     * @return a masked hetu String or null if null was given
+     */
     public static String maskHetu(final String hetu) {
         if (hetu == null)
             return null;
@@ -123,6 +154,12 @@ public final class HetuUtils {
         return hetu;
     }
 
+    /**
+     * Masks the entire hetu with asterisks (*).
+     *
+     * @param hetu a Finnish National Identification Number to be masked, such as "040789-5863"
+     * @return a masked hetu String or null if null was given
+     */
     public static String maskHetuFull(final String hetu) {
         if (hetu == null)
             return null;
@@ -130,7 +167,7 @@ public final class HetuUtils {
         return maskHetuInternal(hetu, true);
     }
 
-    private static Character getChecksumCharacter(final String partialHetu) {
+    static Character getChecksumCharacter(final String partialHetu) {
         final long checkNumber = Long.parseLong(String.format("%s%s", StringUtils.substring(partialHetu, 0, 6),
                 StringUtils.substring(partialHetu, 7, 10)));
         return CHECKSUM_CHARACTERS.charAt((int)(checkNumber % CHECKSUM_CHARACTERS.length()));
@@ -143,14 +180,4 @@ public final class HetuUtils {
         }
         return masked.toString();
     }
-    
-    /* roles-auths-common/common/target/classes$ java -cp .:/home/<user>/.m2/repository/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar fi.vm.kapa.rova.utils.HetuUtils */
-    public static void main(String[] args) {
-        String testHetu1 = "060887-298C";
-        String testHetu2 = "060887-298D";
-        System.out.println(testHetu1 +" is "+ (isHetuValid(testHetu1) ? "valid" : "not valid") );
-        System.out.println(testHetu2 +" is "+ (isHetuValid(testHetu2) ? "valid" : "not valid") );
-        System.out.println(testHetu1 +" is "+ (isMaleHetu(testHetu1) ? "male" : "female") );
-    }
-    
 }
