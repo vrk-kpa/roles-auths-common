@@ -219,6 +219,18 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>public/assets/font/**</exclude>
+                    <exclude>public/assets/fonts/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>public/assets/font/**</include>
+                    <include>public/assets/fonts/**</include>
+                </includes>
             </resource>
         </resources>
         <pluginManagement>
