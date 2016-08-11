@@ -33,6 +33,7 @@ public enum ExceptionType implements ErrorCode {
     MATCHING_RULESET_NOT_FOUND(107),
     ILLEGAL_RULE_CONFIG(108),
     DUBLICATE_USER_IDENTITY(109),
+    INVALID_WEB_API_REDIRECT_URL(110),
     OTHER_EXCEPTION(199);
 
     int number;
