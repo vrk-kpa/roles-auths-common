@@ -199,6 +199,19 @@
                 <artifactId>flyway-core</artifactId>
                 <version>4.0.3</version>
             </dependency>
+
+            <!-- database deps -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>9.4-1206-jdbc42</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>2.4.2</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
