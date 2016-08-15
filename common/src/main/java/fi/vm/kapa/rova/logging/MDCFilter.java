@@ -49,10 +49,12 @@ public class MDCFilter implements Filter {
             throws IOException, ServletException {
         String reqId = fetchRequestId();
         MDC.put(REQUEST_ID, reqId);
+        MDC.put(Logger.Field.CLIENT_IP.toString(), getRemoteAddr((HttpServletRequest)servletRequest));
         try {
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             MDC.remove(REQUEST_ID);
+            MDC.remove(Logger.Field.CLIENT_IP.toString());
         }
     }
     public String fetchRequestId() {
@@ -87,5 +89,25 @@ public class MDCFilter implements Filter {
     @Override
     public void destroy() {
         // NOP
+    }
+    
+    private String getRemoteAddr(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 }
