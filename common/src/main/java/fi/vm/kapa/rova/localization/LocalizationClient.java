@@ -31,6 +31,17 @@ public class LocalizationClient extends AbstractClient {
     }
 
 
+    public List<Localization> getLocalizationCustomized(String lang, String key, String[] customs) {
+        StringBuilder cSb = new StringBuilder();
+        if (customs != null) {
+            for (String s : customs) {
+                cSb.append(s);
+                cSb.append("/");
+            }
+        }
+        return getGeneric(format("/rest/localization/{0}/{1}/[2}", lang, key, cSb.toString()), new GenericType<List<Localization>>() {});
+    }
+
     @Override
     public String toString() {
         return "EngineDataProvider engine url: " + endPointUrl;
