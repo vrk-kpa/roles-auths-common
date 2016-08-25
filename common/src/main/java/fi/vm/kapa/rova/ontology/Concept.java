@@ -30,6 +30,7 @@ public class Concept {
     private long id;
     private String uri;
     private Set<String> broaderConcepts = new HashSet<>();
+    private Set<String> narrowerConcepts = new HashSet<>();
     private Set<String> conceptMatches = new HashSet<>();
     private Set<Label> labels = new HashSet<>();
     private Set<Label> definitions = new HashSet<>();
@@ -85,4 +86,11 @@ public class Concept {
         this.definitions = definitions;
     }
 
+    public Set<String> getNarrowerConcepts() {
+        return narrowerConcepts;
+    }
+
+    public void setNarrowerConcepts(Set<String> narrowerConcepts) {
+        this.narrowerConcepts = narrowerConcepts;
+    }
 }
