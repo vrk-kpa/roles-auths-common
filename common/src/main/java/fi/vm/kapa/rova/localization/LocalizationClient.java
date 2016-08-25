@@ -26,12 +26,12 @@ public class LocalizationClient extends AbstractClient {
         return getGeneric(format("/rest/localization/all/{0}", lang), new GenericType<List<Localization>>() {});
     }
 
-    public List<Localization> getLocalization(String lang, String key) {
-        return getGeneric(format("/rest/localization/{0}/{1}", lang, key), new GenericType<List<Localization>>() {});
+    public String getLocalization(String lang, String key) {
+        return getGeneric(format("/rest/localization/{0}/{1}", lang, key), new GenericType<String>() {});
     }
 
 
-    public List<Localization> getLocalizationCustomized(String lang, String key, String[] customs) {
+    public String getLocalizationCustomized(String lang, String key, String[] customs) {
         StringBuilder cSb = new StringBuilder();
         if (customs != null) {
             for (String s : customs) {
@@ -39,7 +39,7 @@ public class LocalizationClient extends AbstractClient {
                 cSb.append("/");
             }
         }
-        return getGeneric(format("/rest/localization/{0}/{1}/[2}", lang, key, cSb.toString()), new GenericType<List<Localization>>() {});
+        return getGeneric(format("/rest/localization/{0}/{1}/[2}", lang, key, cSb.toString()), new GenericType<String>() {});
     }
 
     @Override
