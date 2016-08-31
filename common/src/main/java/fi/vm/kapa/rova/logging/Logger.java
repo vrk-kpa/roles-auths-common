@@ -75,7 +75,9 @@ public class Logger {
         TYPE("type"), // log type
         WARNINGSTR("warning"), // varoitusviesti
         STACKTRACE("stacktrace"),
-        CLIENT_IP("client_ip");
+        CLIENT_IP("client_ip"),
+        SOCIAL_SECURITY_NUMBER("social_security_number"),//hetu
+        PERSON_FULLNAME("person_fullname");
 
         private String value;
         Field(String value) {
