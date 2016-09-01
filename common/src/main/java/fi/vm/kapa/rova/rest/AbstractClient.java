@@ -16,11 +16,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import static fi.vm.kapa.rova.rest.exception.ExceptionType.*;
-import static fi.vm.kapa.rova.rest.exception.ExceptionType.OTHER_EXCEPTION;
 import static fi.vm.kapa.rova.rest.exception.SystemException.Key.DESCRIPTION;
 
 /**
@@ -82,7 +82,13 @@ public class AbstractClient {
         WebTarget webTarget = getClient().target(endPointUrl + url);
         if (params != null) {
             for (Map.Entry<String, Object> param : params.entrySet()) {
-                webTarget = webTarget.queryParam(param.getKey(), param.getValue());
+                String key = param.getKey();
+                Object value = param.getValue();
+                Object[] values = new Object[] {value};
+                if (Collection.class.isAssignableFrom(value.getClass())) {
+                    values = ((Collection)value).toArray();
+                }
+                webTarget = webTarget.queryParam(key, values);
             }
         }
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
