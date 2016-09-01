@@ -77,7 +77,8 @@ public class Logger {
         STACKTRACE("stacktrace"),
         CLIENT_IP("client_ip"),
         SOCIAL_SECURITY_NUMBER("social_security_number"),//hetu
-        PERSON_FULLNAME("person_fullname");
+        PERSON_FIRSTNAMES("person_firstnames"),
+        PERSON_LASTNAME("person_lastname");
 
         private String value;
         Field(String value) {
