@@ -21,24 +21,24 @@ public class OntologyClient extends AbstractClient {
     }
 
     public Concept getConcept(String uri) {
-        return getGeneric(format("/rest/concept/{0}", uri), new GenericType<Concept>() {});
+        return getGeneric(format("/rest/ontology/concept/{0}", uri), new GenericType<Concept>() {});
     }
 
     public List<Concept> getConcepts() {
-        return getGeneric(format("/rest/concept/all"), new GenericType<List<Concept>>() {});
+        return getGeneric(format("/rest/ontology/concept/all"), new GenericType<List<Concept>>() {});
     }
 
     public Boolean isBroaderConcept(String broaderUri, String narrowerUri) {
         Map<String, Object> params = new HashMap<>();
         params.put("broader-uri", broaderUri);
         params.put("narrower-uri", narrowerUri);
-        return getGeneric(format("/rest/concept/is-broader-concept", params), new GenericType<Boolean>() {});
+        return getGeneric(format("/rest/ontology/concept/is-broader-concept", params), new GenericType<Boolean>() {});
     }
 
     public Set<Concept> getNarrowerConcepts(String uri) {
         Map<String, Object> params = new HashMap<>();
         params.put("broader-uri", uri);
-        return getGeneric(format("/rest/concept/narrower", params), new GenericType<Set<Concept>>() {});
+        return getGeneric(format("/rest/ontology/concept/narrower", params), new GenericType<Set<Concept>>() {});
     }
 
 }
