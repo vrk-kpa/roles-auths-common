@@ -68,9 +68,9 @@ public class ValidationUtilTest {
         assertTrue(vUtil.handleClientRequestContext(clientRequestContext));
         assertEquals(2, headers.size());
 
-        String hash = (((List<Object>) headers.get(ValidationUtil.HASH_HEADER_NAME)).get(0)).toString();
+        String hash = (headers.get(ValidationUtil.HASH_HEADER_NAME).get(0)).toString();
         assertNotNull(hash);
-        String timestamp = (((List<Object>) headers.get(ValidationUtil.TIMESTAMP_HEADER_NAME)).get(0)).toString();
+        String timestamp = (headers.get(ValidationUtil.TIMESTAMP_HEADER_NAME).get(0)).toString();
         assertNotNull(timestamp);
 
         Assert.assertEquals(hash, HashGenerator.hash(uri.getPath() + timestamp, TEST_KEY));
@@ -91,9 +91,9 @@ public class ValidationUtilTest {
         assertTrue(vUtil.handleClientRequestContext(clientRequestContext));
         assertEquals(2, headers.size());
 
-        String hash = (((List<Object>) headers.get(ValidationUtil.HASH_HEADER_NAME)).get(0)).toString();
+        String hash = (headers.get(ValidationUtil.HASH_HEADER_NAME).get(0)).toString();
         assertNotNull(hash);
-        String timestamp = (((List<Object>) headers.get(ValidationUtil.TIMESTAMP_HEADER_NAME)).get(0)).toString();
+        String timestamp = (headers.get(ValidationUtil.TIMESTAMP_HEADER_NAME).get(0)).toString();
         assertNotNull(timestamp);
 
         Assert.assertEquals(hash, HashGenerator.hash(uri.getPath()+ "?"+ uri.getQuery() + timestamp, TEST_KEY));

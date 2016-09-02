@@ -34,6 +34,8 @@ import javax.ws.rs.core.UriInfo;
 
 import fi.vm.kapa.rova.logging.Logger;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public class ValidationUtil {
 
     public static final String HASH_HEADER_NAME = "X-RoVa-Hash";
@@ -64,7 +66,7 @@ public class ValidationUtil {
         StringBuilder data = new StringBuilder();
         data.append(uri.getPath());
         String query = uri.getQuery();
-        if (query != null && query.length() > 0) {
+        if (!isBlank(query) ) {
             data .append("?");
             data.append(query);
         }
@@ -114,7 +116,7 @@ public class ValidationUtil {
         return hash.equals(HashGenerator.hash(data, apiKey));
     }
 
-    private String getPathWithParams(UriInfo uInfo) throws IOException {
+    private String getPathWithParams(UriInfo uInfo) throws java.io.UnsupportedEncodingException {
         String uInfoPath = uInfo.getPath();
         String absolutePath = uInfo.getAbsolutePath().toString();
         String requestUri = (URLDecoder.decode(uInfo.getRequestUri().toString(), Charset.defaultCharset().toString()));

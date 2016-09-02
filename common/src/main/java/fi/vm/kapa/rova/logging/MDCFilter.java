@@ -23,6 +23,7 @@
 package fi.vm.kapa.rova.logging;
 
 import fi.vm.kapa.rova.utils.RemoteAddressResolver;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
 public class MDCFilter implements Filter {
@@ -91,4 +93,5 @@ public class MDCFilter implements Filter {
     public void destroy() {
         // NOP
     }
+
 }

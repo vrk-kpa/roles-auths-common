@@ -127,16 +127,7 @@ public class AbstractClient {
                 default:
                     throw new SystemException(OTHER_EXCEPTION).set(DESCRIPTION, SystemException.MSG_FAIL);
             }
-        } catch (ClassCastException e) {
-            LOG.error("Exception occured while handling error",e);
-            throw new SystemException(OTHER_EXCEPTION).set(DESCRIPTION, SystemException.MSG_FAIL);
-        } catch (ProcessingException e) {
-            LOG.error("Exception occured while handling error",e);
-            throw new SystemException(OTHER_EXCEPTION).set(DESCRIPTION, SystemException.MSG_FAIL);
-        } catch (IllegalStateException e) {
-            LOG.error("Exception occured while handling error",e);
-            throw new SystemException(OTHER_EXCEPTION).set(DESCRIPTION, SystemException.MSG_FAIL);
-        }  catch (NullPointerException e) {
+        } catch (ClassCastException | ProcessingException | NullPointerException | IllegalStateException e) {
             LOG.error("Exception occured while handling error",e);
             throw new SystemException(OTHER_EXCEPTION).set(DESCRIPTION, SystemException.MSG_FAIL);
         }

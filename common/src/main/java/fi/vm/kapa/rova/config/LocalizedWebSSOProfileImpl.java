@@ -34,7 +34,7 @@ public class LocalizedWebSSOProfileImpl extends WebSSOProfileImpl {
     private static final String NS_VETUMA = "urn:vetuma:SAML:2.0:extensions";
     private static final String EL_VETUMA = "vetuma";
     private static final String EL_LG = "LG";
-    private static final List<String> supportedLanguages =  Arrays.asList(new String [] { "fi", "sv", "en" });
+    private static final List<String> supportedLanguages = Arrays.asList("fi", "sv", "en");
 
     @Override
     protected AuthnRequest getAuthnRequest(SAMLMessageContext context, WebSSOProfileOptions options, AssertionConsumerService assertionConsumer,

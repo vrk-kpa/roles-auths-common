@@ -66,7 +66,7 @@ public class LogbackConfigurator {
     protected Boolean consoleLog;
 
     @PostConstruct
-    public void initLogging() throws Exception {
+    public void initLogging() {
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         LogstashEncoder enc = new LogstashEncoder();

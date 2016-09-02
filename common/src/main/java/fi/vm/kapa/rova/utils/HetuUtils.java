@@ -98,7 +98,7 @@ public final class HetuUtils {
                     StringUtils.substring(hetu, 0, 2));
             DATE_FORMAT.parse(fullLengthBirthDate);
             return true;
-        } catch (final ParseException e) {
+        } catch (final ParseException ignored) {
             return false;
         }
     }
@@ -110,7 +110,7 @@ public final class HetuUtils {
      * @return true if the given hetu has a valid birthday part
      */
     public static boolean isChecksumCharacterValid(final String hetu) {
-        return getChecksumCharacter(hetu).charValue() == hetu.charAt(10);
+        return getChecksumCharacter(hetu) == hetu.charAt(10);
     }
 
     /**

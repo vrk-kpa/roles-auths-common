@@ -38,8 +38,7 @@ public class StatelessCSRFFilterTest {
     public void testUriParsing() {
         StatelessCSRFFilter filter = new StatelessCSRFFilter() {
             @Override
-            protected void onAccessDenied(HttpServletRequest request, HttpServletResponse response)
-                    throws IOException, ServletException {
+            protected void onAccessDenied(HttpServletRequest request, HttpServletResponse response) {
                 //do nothing
             }
         };

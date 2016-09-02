@@ -66,6 +66,7 @@ public final class YUtils {
     }
 
     /* roles-auths-common/common/target/classes$ java fi.vm.kapa.rova.utils.YUtils */
+    @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void main(String[] args) {
         String testYtunnus = "1572860-0"; // ok
         String testYtunnus2 = "0737546-2"; // ok

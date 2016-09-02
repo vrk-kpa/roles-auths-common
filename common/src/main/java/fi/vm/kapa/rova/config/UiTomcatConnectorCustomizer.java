@@ -66,7 +66,7 @@ public class UiTomcatConnectorCustomizer implements TomcatConnectorCustomizer {
                 port = Integer.parseInt(env.getProperty(CONN_PROXY_PORT_PROPERTY));
             } catch (NumberFormatException nfe) {
                 LOG.warning("Proxy port not properly set in '" + CONN_PROXY_PORT_PROPERTY + "'. Using "
-                        + CONN_PROXY_PORT_DEFAULT + ".");
+                        + CONN_PROXY_PORT_DEFAULT + ".", nfe);
             }
             LOG.info("Setting connector proxy port: " + port);
             connector.setProxyPort(port);
