@@ -22,10 +22,10 @@
  */
 package fi.vm.kapa.rova.external.model.vtj;
 
+import fi.vm.kapa.rova.engine.evaluation.Evaluable;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import fi.vm.kapa.rova.engine.evaluation.Evaluable;
 
 public class Person implements Evaluable {
 

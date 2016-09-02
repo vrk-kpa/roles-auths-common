@@ -1,13 +1,8 @@
 package fi.vm.kapa.rova.localization;
 
 import fi.vm.kapa.rova.rest.AbstractClient;
-import org.springframework.stereotype.Component;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static java.text.MessageFormat.format;

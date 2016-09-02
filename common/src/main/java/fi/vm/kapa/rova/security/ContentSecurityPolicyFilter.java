@@ -22,11 +22,10 @@
  */
 package fi.vm.kapa.rova.security;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class ContentSecurityPolicyFilter  extends HeadersAddingFilter {
 

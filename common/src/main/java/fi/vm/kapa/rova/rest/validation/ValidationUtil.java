@@ -22,17 +22,16 @@
  */
 package fi.vm.kapa.rova.rest.validation;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
+import fi.vm.kapa.rova.logging.Logger;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-
-import fi.vm.kapa.rova.logging.Logger;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
