@@ -78,6 +78,7 @@ public class Logger {
         CLIENT_IP("client_ip"),
         SOCIAL_SECURITY_NUMBER("social_security_number"),//hetu
         PERSON_FIRSTNAMES("person_firstnames"),
+        AUTHENTICATION_ASSERTION("authentication_assertion"),
         PERSON_LASTNAME("person_lastname");
 
         private String value;
@@ -176,22 +177,6 @@ public class Logger {
         return slf4jLogger.isDebugEnabled();
     }
 
-    private void logDebug(String msg) {
-        slf4jLogger.debug(msg);
-    }
-
-    private void logInfo(String msg) {
-        slf4jLogger.info(msg);
-    }
-
-    private void logWarning(String msg) {
-        slf4jLogger.warn(msg);
-    }
-
-    private void logError(String msg) {
-        slf4jLogger.error(msg);
-    }
-
     @SuppressWarnings("squid:S1148") // don't complain about printStackTrace()
     public static String createStackTrace(Exception e) {
         StringWriter sw = new StringWriter();
@@ -275,7 +260,7 @@ public class Logger {
         }
 
         public void log() {
-            if (!logger.isEnabled(this.level)) {
+            if (!isEnabled(this.level)) {
                 return;
             }
             String logJson;
@@ -287,38 +272,36 @@ public class Logger {
             }
             switch (level) {
                 case DEBUG:
-                    logger.logDebug(logJson);
+                    logger.slf4jLogger.debug(logJson);
                     break;
                 case INFO:
-                    logger.logInfo(logJson);
+                    logger.slf4jLogger.info(logJson);
                     break;
                 case WARNING:
-                    logger.logWarning(logJson);
+                    logger.slf4jLogger.warn(logJson);
                     break;
                 case ERROR:
-                    logger.logError(logJson);
+                    logger.slf4jLogger.error(logJson);
                     break;
                 default:
                     throw new IllegalArgumentException("Level " + level + " is not recognized");
             }
         }
-    }
 
-    private boolean isEnabled(Level level) {
-        boolean isEnabled = false;
-        switch (level) {
-            case DEBUG:
-                isEnabled = slf4jLogger.isDebugEnabled();
-                break;
-            case INFO:
-                return slf4jLogger.isInfoEnabled();
-            case WARNING:
-                return slf4jLogger.isWarnEnabled();
-            case ERROR:
-                return slf4jLogger.isErrorEnabled();
+        private boolean isEnabled(Level level) {
+            switch (level) {
+                case DEBUG:
+                    return logger.slf4jLogger.isDebugEnabled();
+                case INFO:
+                    return logger.slf4jLogger.isInfoEnabled();
+                case WARNING:
+                    return logger.slf4jLogger.isWarnEnabled();
+                case ERROR:
+                    return logger.slf4jLogger.isErrorEnabled();
+                default:
+                    throw new IllegalArgumentException("Unknown loglevel: "+level);
+            }
         }
-        return isEnabled;
-//        throw new IllegalArgumentException("Unknown loglevel: "+level);
     }
 
     // For testing
