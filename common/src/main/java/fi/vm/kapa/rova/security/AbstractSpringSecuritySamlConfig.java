@@ -30,6 +30,7 @@ import org.springframework.security.saml.websso.*;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
@@ -65,9 +66,8 @@ public abstract class AbstractSpringSecuritySamlConfig extends WebSecurityConfig
     @Bean
     public abstract SAMLLogoutProcessingFilter samlLogoutProcessingFilter();
 
-    // Handler deciding where to redirect user after successful login
     @Bean
-    public abstract SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler();
+    public abstract SimpleUrlAuthenticationSuccessHandler successRedirectHandler();
 
     // Handler deciding where to redirect user after failed login
     @Bean
