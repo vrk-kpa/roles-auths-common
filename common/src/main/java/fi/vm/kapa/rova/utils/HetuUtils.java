@@ -26,6 +26,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -166,6 +171,25 @@ public final class HetuUtils {
             return null;
 
         return maskHetuInternal(hetu, true);
+    }
+    
+    /**
+     * Checks whether the person is at least 18 years old.
+     * 
+     * @param hetu SSN to check
+     * @return true if the person is at least 18 years old
+     */
+    public static boolean isAdultHetu(final String hetu) {
+        try {
+            final String fullLengthBirthDate = String.format("%d%s-%s-%s",
+                    invertedSeparators.get(hetu.charAt(6)),
+                    StringUtils.substring(hetu, 4, 6),
+                    StringUtils.substring(hetu, 2, 4),
+                    StringUtils.substring(hetu, 0, 2));
+            return Period.between(LocalDate.parse(fullLengthBirthDate, DateTimeFormatter.ISO_LOCAL_DATE), LocalDate.now()).getYears() >= 18;
+        } catch (final DateTimeParseException ignored) {
+            return false;
+        }
     }
 
     static Character getChecksumCharacter(final String partialHetu) {
