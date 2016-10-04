@@ -104,7 +104,6 @@ public class ValidationUtil {
             return false;
         }
     }
-    
 
     private boolean requestAlive(String timestampHeader) {
         long timestamp = Long.parseLong(timestampHeader);
@@ -116,12 +115,9 @@ public class ValidationUtil {
     }
 
     private String getPathWithParams(UriInfo uInfo) throws java.io.UnsupportedEncodingException {
-        String uInfoPath = uInfo.getPath();
-        String absolutePath = uInfo.getAbsolutePath().toString();
         String requestUri = (URLDecoder.decode(uInfo.getRequestUri().toString(), Charset.defaultCharset().toString()));
-        String path = requestUri.substring(absolutePath.length() - uInfoPath.length());
+        String path = requestUri.substring(uInfo.getBaseUri().toString().length());
         return path;
-
     }
 
 }

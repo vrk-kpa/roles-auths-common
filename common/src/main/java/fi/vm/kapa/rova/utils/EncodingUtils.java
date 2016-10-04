@@ -22,30 +22,26 @@
  */
 package fi.vm.kapa.rova.utils;
 
-import javax.servlet.http.HttpServletRequest;
+import fi.vm.kapa.rova.logging.Logger;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
- * Created by Juha Korkalainen on 3.9.2016.
+ * Created by mtom on 10/4/16.
  */
-public class RemoteAddressResolver {
+public class EncodingUtils {
 
-    public static String resolve(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
+    private static final Logger LOG = Logger.getLogger(EncodingUtils.class);
+
+    public static String encodePathParam(String value) {
+        try {
+            value = URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            LOG.warning("Unable to encode value: " + value, e);
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
+        return value;
     }
+
 }
