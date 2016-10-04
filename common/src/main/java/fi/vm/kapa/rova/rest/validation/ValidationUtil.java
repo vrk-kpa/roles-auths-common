@@ -96,15 +96,16 @@ public class ValidationUtil {
         }
 
         if (requestAlive(timestamp)) {
+            LOG.info("CHECKING MATCHES...");
             String path = getPathWithParams(context.getUriInfo());
             String data = pathPrefix + "/" + path + timestamp;
+            LOG.info("*** OUTBOUND: " + data);
             return matches(hash, data, apiKey);
         } else {
             LOG.info("Request timestamp (%s) was older than %d", timestamp, requestAliveMillis);
             return false;
         }
     }
-    
 
     private boolean requestAlive(String timestampHeader) {
         long timestamp = Long.parseLong(timestampHeader);
@@ -116,12 +117,9 @@ public class ValidationUtil {
     }
 
     private String getPathWithParams(UriInfo uInfo) throws java.io.UnsupportedEncodingException {
-        String uInfoPath = uInfo.getPath();
-        String absolutePath = uInfo.getAbsolutePath().toString();
         String requestUri = (URLDecoder.decode(uInfo.getRequestUri().toString(), Charset.defaultCharset().toString()));
-        String path = requestUri.substring(absolutePath.length() - uInfoPath.length());
+        String path = requestUri.substring(uInfo.getBaseUri().toString().length());
         return path;
-
     }
 
 }
