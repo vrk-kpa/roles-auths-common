@@ -23,7 +23,6 @@
 package fi.vm.kapa.rova.rest.validation;
 
 import fi.vm.kapa.rova.logging.Logger;
-import fi.vm.kapa.rova.utils.EncodingUtils;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
