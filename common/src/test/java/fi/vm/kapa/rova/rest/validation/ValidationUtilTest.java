@@ -149,7 +149,6 @@ public class ValidationUtilTest {
 
     @Test
     public void testHandleContainerRequestContextWithPathParam() throws Exception {
-        LOG.info("*** TESTING WITH PATH PARAM");
         ContainerRequestContext crc = EasyMock.createMock(ContainerRequestContext.class);
         UriInfo uInfo = EasyMock.createMock(UriInfo.class);
         EasyMock.expect(uInfo.getRequestUri()).andReturn(new URI(URL + "/" + encodePathParam(PATH_PARAM))).once();

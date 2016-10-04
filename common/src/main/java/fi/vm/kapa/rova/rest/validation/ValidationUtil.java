@@ -96,10 +96,8 @@ public class ValidationUtil {
         }
 
         if (requestAlive(timestamp)) {
-            LOG.info("CHECKING MATCHES...");
             String path = getPathWithParams(context.getUriInfo());
             String data = pathPrefix + "/" + path + timestamp;
-            LOG.info("*** OUTBOUND: " + data);
             return matches(hash, data, apiKey);
         } else {
             LOG.info("Request timestamp (%s) was older than %d", timestamp, requestAliveMillis);
