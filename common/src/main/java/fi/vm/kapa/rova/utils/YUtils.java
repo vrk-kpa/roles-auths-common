@@ -45,7 +45,7 @@ public final class YUtils {
     }
 
     public static boolean isYFormatValid(final String ytunnus) {
-        return ytunnus.matches("\\d{6,7}[-]\\d{1}");
+        return ytunnus != null ? ytunnus.matches("\\d{6,7}[-]\\d{1}") : false;
     }
 
     public static boolean isChecksumCharacterValid(final String ytunnus) {

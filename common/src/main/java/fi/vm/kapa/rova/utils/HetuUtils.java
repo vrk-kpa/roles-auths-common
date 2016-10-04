@@ -84,7 +84,7 @@ public final class HetuUtils {
      * @return true if the given hetu has correct format
      */
     public static boolean isHetuFormatValid(final String hetu) {
-        return hetu.matches("\\d{6}[+-AB]\\d{3}[0123456789ABCDEFHJKLMNPRSTUVWXY]");
+        return hetu != null ? hetu.matches("\\d{6}[+-AB]\\d{3}[0123456789ABCDEFHJKLMNPRSTUVWXY]") : false;
     }
 
     /**
