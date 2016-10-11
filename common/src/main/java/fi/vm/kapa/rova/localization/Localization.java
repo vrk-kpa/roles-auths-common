@@ -48,6 +48,12 @@ public class Localization {
         this.lang = parts[1];
         this.value = StringUtils.join(Arrays.copyOfRange(parts, 2, parts.length), ";");
     }
+    
+    public Localization(String key, String lang, String value) {
+        this.key = key;
+        this.lang = lang;
+        this.value = value;
+    }
 
     public String getKey() {
         return key;
