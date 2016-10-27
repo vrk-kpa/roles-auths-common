@@ -33,7 +33,6 @@
 
     <properties>
         <io.spring.platform-version>2.0.7.RELEASE</io.spring.platform-version>
-        <!--<io.spring.platform-version>1.1.5.RELEASE</io.spring.platform-version>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <docker.image.prefix>docker-registry.kapa.ware.fi</docker.image.prefix>
         <spotify-docker.version>0.3.1</spotify-docker.version>
@@ -41,7 +40,6 @@
         <jenkins.build.tag>latest</jenkins.build.tag>
         <jersey.version>2.22.1</jersey.version>
         <cxf.version>3.1.6</cxf.version>
-
         <surefireArgLine/>
         <skip.unit.tests/>
     </properties>
@@ -390,8 +388,8 @@
                                 <goal>install-node-and-npm</goal>
                             </goals>
                             <configuration>
-                                <nodeVersion>v5.1.0</nodeVersion>
-                                <npmVersion>3.3.12</npmVersion>
+                                <nodeVersion>v6.6.0</nodeVersion>
+                                <npmVersion>3.10.3</npmVersion>
                             </configuration>
                         </execution>
             
