@@ -53,6 +53,9 @@ public class LogbackConfigurator {
     @Value("${logstash.port:5000}")
     private int logstashPort;
 
+    @Value("${logstash.accesslog.port:0}")
+    private int logstashAccessLogPort;
+
     @Value("${service.name}")
     private String serviceName;
 
@@ -115,7 +118,8 @@ public class LogbackConfigurator {
 
                 LogstashAccessTcpSocketAppender logStashAxsAppender = new LogstashAccessTcpSocketAppender();
                 logStashAxsAppender.setRemoteHost(logstashHost);
-                logStashAxsAppender.setPort(logstashPort);
+                // default to logstashPort if a separate port for access log is not defined 
+                logStashAxsAppender.setPort(logstashAccessLogPort != 0 ? logstashAccessLogPort : logstashPort);
                 logStashAxsAppender.setEncoder(enc);
                 logStashAxsAppender.setContext(lc);
                 logStashAxsAppender.setName("logstash_access");
