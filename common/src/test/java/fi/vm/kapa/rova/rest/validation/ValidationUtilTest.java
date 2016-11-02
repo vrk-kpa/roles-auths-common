@@ -216,7 +216,7 @@ public class ValidationUtilTest {
         EasyMock.verify(crc);
     }
 
-    @Test
+    @Test(expected = IOException.class)
     public void testOldRequestHandleContainerRequestContext() throws Exception {
         ContainerRequestContext crc = EasyMock.createMock(ContainerRequestContext.class);
         long timestamp = System.currentTimeMillis() - 5000;

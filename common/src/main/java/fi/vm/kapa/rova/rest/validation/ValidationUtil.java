@@ -100,8 +100,7 @@ public class ValidationUtil {
             String data = pathPrefix + "/" + path + timestamp;
             return matches(hash, data, apiKey);
         } else {
-            LOG.info("Request timestamp (%s) was older than %d", timestamp, requestAliveMillis);
-            return false;
+            throw new IOException("Request timestamp ("+timestamp+") was older than "+requestAliveMillis + " ms");
         }
     }
 
