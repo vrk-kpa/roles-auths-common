@@ -22,18 +22,22 @@
  */
 package fi.vm.kapa.rova.rest.validation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.kapa.rova.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StreamUtils;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class ValidationUtil {
 
@@ -51,29 +55,35 @@ public class ValidationUtil {
         this.requestAliveMillis = requestAliveSeconds * 1000;
         this.pathPrefix = pathPrefix == null ? "" : pathPrefix;
     }
-
+    
     /**
-     * Handle out bound client request
+     * Append validation headers to an outbound client request
      *
-     * @param context
-     * @return
+     * @param context Current ClientRequestContext
      */
-    public boolean handleClientRequestContext(ClientRequestContext context) throws IOException {
+    public void appendValidationHeaders(ClientRequestContext context) throws IOException {
+        long timestamp = System.currentTimeMillis();
+        String hashData = buildValidationHashData(context, timestamp);
+        
+        String hash = HashGenerator.hash(hashData, apiKey);
         MultivaluedMap<String, Object> headers = context.getHeaders();
-        String timestamp = "" + System.currentTimeMillis();
-        URI uri = context.getUri();
+        headers.putSingle(HASH_HEADER_NAME, hash);
+        headers.putSingle(TIMESTAMP_HEADER_NAME, timestamp);
+    }
+
+    private String buildValidationHashData(ClientRequestContext context, long timestamp) throws JsonProcessingException {
         StringBuilder data = new StringBuilder();
-        data.append(uri.getPath());
-        String query = uri.getQuery();
-        if (!isBlank(query) ) {
-            data .append("?");
+        data.append(context.getUri().getPath());
+        String query = context.getUri().getQuery();
+        if (!StringUtils.isBlank(query) ) {
+            data.append("?");
             data.append(query);
         }
         data.append(timestamp);
-        String hash = HashGenerator.hash(data.toString(), apiKey);
-        headers.putSingle(HASH_HEADER_NAME, hash);
-        headers.putSingle(TIMESTAMP_HEADER_NAME, timestamp);
-        return true;
+        if (context.getEntity() != null) {
+            data.append(new ObjectMapper().writeValueAsString(context.getEntity()));
+        }
+        return data.toString();
     }
 
     /**
@@ -82,7 +92,7 @@ public class ValidationUtil {
      * @param context
      * @return
      */
-    public boolean handleContainerRequestContext(ContainerRequestContext context) throws IOException {
+    public boolean checkValidationHeaders(ContainerRequestContext context) throws IOException {
         String timestamp = context.getHeaderString(TIMESTAMP_HEADER_NAME);
         if (timestamp == null) {
             LOG.info("Found request without proper timestamp header: " + TIMESTAMP_HEADER_NAME);
@@ -94,10 +104,15 @@ public class ValidationUtil {
             LOG.info("Found request without proper hash header: " + HASH_HEADER_NAME);
             return false;
         }
-
+        
         if (requestAlive(timestamp)) {
+            byte[] entity = null;
+            if (context.getEntityStream() != null) {
+                entity = StreamUtils.copyToByteArray(context.getEntityStream());
+                context.setEntityStream(new ByteArrayInputStream(entity));
+            }
             String path = getPathWithParams(context.getUriInfo());
-            String data = pathPrefix + "/" + path + timestamp;
+            String data = pathPrefix + "/" + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
             return matches(hash, data, apiKey);
         } else {
             throw new IOException("Request timestamp ("+timestamp+") was older than "+requestAliveMillis + " ms");

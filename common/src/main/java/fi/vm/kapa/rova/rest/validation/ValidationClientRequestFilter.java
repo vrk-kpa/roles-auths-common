@@ -40,9 +40,6 @@ public class ValidationClientRequestFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        if (!validationUtil.handleClientRequestContext(requestContext)) {
-            throw new IOException("unable to handle request security");
-        }
+        validationUtil.appendValidationHeaders(requestContext);
     }
-
 }
