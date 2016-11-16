@@ -40,7 +40,7 @@ public class DummyValidationContainerRequestFilter implements ContainerRequestFi
             throws IOException {
         List<String> noValidate = requestContext.getUriInfo().getQueryParameters().get("noValidate");
         if ((noValidate == null || !Boolean.parseBoolean(noValidate.get(0))) &&
-                !validationUtil.handleContainerRequestContext(requestContext)) {
+                !validationUtil.checkValidationHeaders(requestContext)) {
             throw new IOException("Request validation failed (hash).");
         }
     }
