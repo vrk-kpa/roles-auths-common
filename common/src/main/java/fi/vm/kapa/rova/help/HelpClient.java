@@ -22,6 +22,7 @@
  */
 package fi.vm.kapa.rova.help;
 
+import fi.vm.kapa.rova.logging.Logger;
 import fi.vm.kapa.rova.rest.AbstractClient;
 import fi.vm.kapa.rova.ui.Channel;
 
@@ -32,12 +33,16 @@ import static java.text.MessageFormat.format;
 
 public class HelpClient extends AbstractClient {
 
+    private static final Logger LOG = Logger.getLogger(HelpClient.class);
+
     public HelpClient(String endPointUrl) {
         super(endPointUrl);
     }
 
     public String getHelp(String lang, Channel channel, String docName) {
-        return getGeneric(format("/rest/help/{0}/{1}/{2}", lang, channel, docName), new GenericType<String>() {});
+        String resource = format("/rest/help/{0}/{1}/{2}", lang, channel, docName);
+        LOG.debug("Loading help resource: " + resource);
+        return getGeneric(resource, new GenericType<String>() {});
     }
 
     @Override
