@@ -36,7 +36,7 @@ public class JsonExceptionMapper extends AbstractExceptionMapper<JsonMappingExce
     public Response toResponse(JsonMappingException e) {
         LOG.error("Unhandled Exception: ", e);
         // replace error msg with less revealing one
-        return getResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), new JsonMappingException("Invalid JSON data"));
+        return getResponse(Response.Status.BAD_REQUEST.getStatusCode(), new JsonMappingException("Invalid JSON data"));
     }
 
 }
