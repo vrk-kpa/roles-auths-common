@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
 
-public abstract class AbstractExceptionMapper<T extends Throwable> implements javax.ws.rs.ext.ExceptionMapper<T> {
+public abstract class AbstractExceptionMapper<T extends Throwable> implements org.glassfish.jersey.spi.ExtendedExceptionMapper<T> {
 
     @Override
     public abstract Response toResponse(T e);

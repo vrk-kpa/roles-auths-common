@@ -37,4 +37,8 @@ public class ExceptionMapper extends AbstractExceptionMapper<Exception> {
         return getResponse(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), e);
     }
 
+    public boolean isMappable(Exception e) {
+        return true;
+    }
+
 }
