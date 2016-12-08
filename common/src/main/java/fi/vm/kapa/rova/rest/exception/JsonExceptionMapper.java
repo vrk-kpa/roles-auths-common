@@ -39,4 +39,8 @@ public class JsonExceptionMapper extends AbstractExceptionMapper<JsonMappingExce
         return getResponse(Response.Status.BAD_REQUEST.getStatusCode(), new JsonMappingException("Invalid JSON data"));
     }
 
+    public boolean isMappable(JsonMappingException e) {
+        return true;
+    }
+
 }

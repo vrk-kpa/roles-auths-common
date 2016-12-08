@@ -38,4 +38,7 @@ public class WebApplicationExceptionMapper extends AbstractExceptionMapper<WebAp
         return getResponse(e.getResponse().getStatus(), e);
     }
 
+    public boolean isMappable(WebApplicationException e) {
+        return true;
+    }
 }

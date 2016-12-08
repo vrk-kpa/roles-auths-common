@@ -50,4 +50,8 @@ public class SystemExceptionMapper extends AbstractExceptionMapper<SystemExcepti
         return entity;
     }
 
+    public boolean isMappable(SystemException e) {
+        return true;
+    }
+
 }
