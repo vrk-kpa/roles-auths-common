@@ -1,6 +1,6 @@
 # roles-auths-common
 
-ROVAn yhteiset osat.
+Shared components for roles-auths - applications
 
 ## License headers
 
