@@ -28,6 +28,7 @@ import fi.vm.kapa.rova.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StreamUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
@@ -119,6 +120,33 @@ public class ValidationUtil {
         }
     }
 
+    public boolean checkValidationHeaders(HttpServletRequest request) throws IOException {
+        String timestamp = request.getHeader(TIMESTAMP_HEADER_NAME);
+        if (timestamp == null) {
+            throw new IOException("Found request without proper timestamp header: " + TIMESTAMP_HEADER_NAME);
+        }
+
+        String hash = request.getHeader(HASH_HEADER_NAME);
+        if (hash == null) {
+            LOG.info("Found request without proper hash header: " + HASH_HEADER_NAME);
+            throw new IOException("Found request without proper hash header: " + HASH_HEADER_NAME);
+        }
+
+        if (requestAlive(timestamp)) {
+            byte[] entity = null;
+            if (request.getMethod().matches("POST|PUT|DELETE")) {
+                entity = StreamUtils.copyToByteArray(request.getInputStream());
+            }
+
+            String path = getPathWithParams(request);
+            String data = pathPrefix  + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
+            return matches(hash, data, apiKey);
+        } else {
+            throw new IOException("Request timestamp ("+timestamp+") was older than "+requestAliveMillis + " ms");
+        }
+    }
+
+
     private boolean requestAlive(String timestampHeader) {
         long timestamp = Long.parseLong(timestampHeader);
         return (System.currentTimeMillis() < (timestamp + requestAliveMillis));
@@ -132,6 +160,11 @@ public class ValidationUtil {
         String requestUri = (URLDecoder.decode(uInfo.getRequestUri().toString(), Charset.defaultCharset().toString()));
         String path = requestUri.substring(uInfo.getBaseUri().toString().length());
         return path;
+    }
+
+    private String getPathWithParams(HttpServletRequest request) {
+        String queryString = (request.getQueryString() != null && request.getQueryString().length() > 0) ? "?" + request.getQueryString() : "";
+        return request.getRequestURI() + queryString ;
     }
 
 }
