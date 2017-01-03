@@ -22,6 +22,7 @@
  */
 package fi.vm.kapa.rova.rest.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import fi.vm.kapa.rova.logging.Logger;
 
@@ -29,17 +30,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class JsonExceptionMapper extends AbstractExceptionMapper<JsonMappingException> {
+public class JsonExceptionMapper extends AbstractExceptionMapper<JsonProcessingException> {
     private static final Logger LOG = Logger.getLogger(JsonExceptionMapper.class);
 
     @Override
-    public Response toResponse(JsonMappingException e) {
+    public Response toResponse(JsonProcessingException e) {
         LOG.error("Unhandled Exception: ", e);
         // replace error msg with less revealing one
-        return getResponse(Response.Status.BAD_REQUEST.getStatusCode(), new JsonMappingException("Invalid JSON data"));
+        return getResponse(Response.Status.BAD_REQUEST.getStatusCode(), new JsonMappingException("HTTP 400 Invalid JSON data"));
     }
 
-    public boolean isMappable(JsonMappingException e) {
+    public boolean isMappable(JsonProcessingException e) {
         return true;
     }
 
