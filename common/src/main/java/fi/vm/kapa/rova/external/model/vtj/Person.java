@@ -67,6 +67,8 @@ public class Person implements Evaluable {
 
     private boolean huollonjakoMaarays;
 
+    private boolean huollonjakoVainAsumisenOsalta;
+
     public String getHetu() {
         return hetu;
     }
@@ -220,14 +222,37 @@ public class Person implements Evaluable {
         this.huollonjakoMaarays = huollonjakoMaarays;
     }
 
+    public boolean isHuollonjakoVainAsumisenOsalta() {
+        return huollonjakoVainAsumisenOsalta;
+    }
+
+    public void setHuollonjakoVainAsumisenOsalta(boolean huollonjakoVainAsumisenOsalta) {
+        this.huollonjakoVainAsumisenOsalta = huollonjakoVainAsumisenOsalta;
+    }
+
     @Override
     public String toString() {
-        return "Person [ssn=" + hetu + ", ssnValid=" + hetuValid
-                + ", firstNames=" + firstNames + ", lastName=" + lastName
-                + ", principals=" + principals + ", guardians=" + edunvalvojat
-                + ", custodians=" + huoltajat + ", deceased=" + deceased
-                + ", protectionOrder=" + turvakielto + ", huostaanotettu="
-                + huostaanotettu + ", guardianship=" + edunvalvonta + ", huollonjakosopimus="
-                + huollonjakoSopimus + ", huollonjakomaarays=" + huollonjakoMaarays + "]";
+        return "Person{" +
+                "hetu='" + hetu + '\'' +
+                ", hetuValid=" + hetuValid +
+                ", firstNames='" + firstNames + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", callingName='" + callingName + '\'' +
+                ", birthdate='" + birthdate + '\'' +
+                ", principals=" + principals +
+                ", edunvalvojat=" + edunvalvojat +
+                ", edunvalvontaValtuutetut=" + edunvalvontaValtuutetut +
+                ", huoltajat=" + huoltajat +
+                ", deceased=" + deceased +
+                ", turvakielto=" + turvakielto +
+                ", huostaanotettu=" + huostaanotettu +
+                ", edunvalvonta=" + edunvalvonta +
+                ", edunvalvontaRajoitettu=" + edunvalvontaRajoitettu +
+                ", edunvalvontaEiRajoitettu=" + edunvalvontaEiRajoitettu +
+                ", edunvalvontaJulistettu=" + edunvalvontaJulistettu +
+                ", huollonjakoSopimus=" + huollonjakoSopimus +
+                ", huollonjakoMaarays=" + huollonjakoMaarays +
+                ", huollonjakoVainAsumisenOsalta=" + huollonjakoVainAsumisenOsalta +
+                '}';
     }
 }
