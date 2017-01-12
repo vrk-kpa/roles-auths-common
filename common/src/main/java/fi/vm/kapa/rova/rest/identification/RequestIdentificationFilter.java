@@ -33,6 +33,10 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
+/**
+ * A ClientRequestFilter that appends the current request and end user identifiers
+ * to outgoing REST calls.
+ */
 @Provider
 @PreMatching
 public class RequestIdentificationFilter implements ClientRequestFilter {
@@ -40,16 +44,42 @@ public class RequestIdentificationFilter implements ClientRequestFilter {
     public static final String ORIG_REQUEST_IDENTIFIER = "X-request-id";
     public static final String ORIG_END_USER = "X-orig-userId";
 
+    public enum HeaderTrust {
+        TRUST_REQUEST_HEADERS,
+        DONT_TRUST_REQUEST_HEADERS
+    };
+
     private String requestId;
     private String endUserId;
-    
-    public RequestIdentificationFilter() {}
-    
-    public RequestIdentificationFilter(String requestId, String endUserId) {
+    private boolean allowValuesFromRequestHeaders;
+
+    /**
+     * Creates a new RequestIdentificationFilter. Reads the request and end user identification from
+     * request attributes or headers.
+     *
+     * @param trustHeaders Whether the identification data in current HTTP request headers should be trusted.
+     *                     Set to DONT_TRUST_REQUEST_HEADERS if the request originates from a browser.
+     */
+    public RequestIdentificationFilter(HeaderTrust trustHeaders) {
+        this(null, null, trustHeaders);
+    }
+
+    /**
+     * Creates a new RequestIdentificationFilter. Reads the request and end user identification from
+     * request attributes or headers. The provided identification data overrides request attributes, but not
+     * request headers (if header trust is set to TRUST_REQUEST_HEADERS).
+     *
+     * @param requestId Current request identifier.
+     * @param endUserId Current end user identifier.
+     * @param trustHeaders Whether the identification data in current HTTP request headers should be trusted.
+     *                     Set to DONT_TRUST_REQUEST_HEADERS if the request originates from a browser.
+     */
+    public RequestIdentificationFilter(String requestId, String endUserId, HeaderTrust trustHeaders) {
         this.requestId = requestId;
         this.endUserId = endUserId;
+        this.allowValuesFromRequestHeaders = (trustHeaders == HeaderTrust.TRUST_REQUEST_HEADERS);
     }
-    
+
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         filter(ORIG_REQUEST_IDENTIFIER, requestContext, requestId);
@@ -64,7 +94,7 @@ public class RequestIdentificationFilter implements ClientRequestFilter {
             if (newValue != null) {
                 value = newValue;
             }
-            if (value == null) {
+            if (value == null && allowValuesFromRequestHeaders) {
                 HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs)
                         .getRequest();
                 value = httpRequest.getHeader(headerName);
@@ -81,5 +111,4 @@ public class RequestIdentificationFilter implements ClientRequestFilter {
         requestContext.getHeaders().remove(headerName);
         requestContext.getHeaders().add(headerName, value);
     }
-
 }
