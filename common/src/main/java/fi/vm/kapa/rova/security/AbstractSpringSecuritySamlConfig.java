@@ -26,15 +26,16 @@ import fi.vm.kapa.rova.config.LocalizedWebSSOProfileImpl;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.velocity.app.VelocityEngine;
-import org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.opensaml.xml.signature.SignatureConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,6 +43,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.saml.*;
 import org.springframework.security.saml.context.SAMLContextProvider;
 import org.springframework.security.saml.context.SAMLContextProviderImpl;
+import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.key.KeyManager;
 import org.springframework.security.saml.log.SAMLDefaultLogger;
 import org.springframework.security.saml.metadata.*;
@@ -50,24 +52,30 @@ import org.springframework.security.saml.processor.*;
 import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.security.saml.websso.*;
 import org.springframework.security.web.FilterChainProxy;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Juha Korkalainen on 16.9.2016.
  */
+@Component
 public abstract class AbstractSpringSecuritySamlConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    protected ApplicationContext context;
+
+    @Autowired
+    protected Environment env;
+
+    public static final String SAML_KEYSTORE_PATH = "saml_keystore_path";
+    public static final String SAML_KEYSTORE_PASS = "saml_keystore_pass";
+    public static final String SAML_PRIVATEKEY_PASS = "saml_privatekey_pass";
+    public static final String SAML_PRIVATEKEY_ALIAS = "saml_privatekey_alias";
 
     protected abstract void configure(HttpSecurity http) throws Exception;
 
@@ -101,7 +109,16 @@ public abstract class AbstractSpringSecuritySamlConfig extends WebSecurityConfig
     public abstract SAMLAuthenticationProvider samlAuthenticationProvider();
 
     @Bean
-    public abstract KeyManager keyManager();
+    public KeyManager keyManager() {
+        Resource storeFile = context.getResource("file:" + env.getRequiredProperty(SAML_KEYSTORE_PATH));
+        String storePass = env.getRequiredProperty(SAML_KEYSTORE_PASS);
+        String defaultKey = env.getRequiredProperty(SAML_PRIVATEKEY_ALIAS);
+        Map<String, String> passwords = new HashMap<String, String>();
+
+        passwords.put(env.getRequiredProperty(SAML_PRIVATEKEY_ALIAS), env.getRequiredProperty(SAML_PRIVATEKEY_PASS));
+
+        return new JKSKeyManager(storeFile, storePass, passwords, defaultKey);
+    }
 
     @Bean
     public abstract FilterChainProxy samlFilter() throws Exception;
