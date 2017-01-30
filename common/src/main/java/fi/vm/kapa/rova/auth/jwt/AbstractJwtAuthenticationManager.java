@@ -1,0 +1,164 @@
+/**
+ * The MIT License
+ * Copyright (c) 2016 Population Register Centre
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package fi.vm.kapa.rova.auth.jwt;
+
+import static fi.vm.kapa.rova.logging.Logger.Field.*;
+
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jwt.*;
+import fi.vm.kapa.rova.logging.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.util.Assert;
+
+import javax.annotation.PostConstruct;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
+import java.util.Collections;
+import java.util.Date;
+
+public abstract class AbstractJwtAuthenticationManager implements AuthenticationManager {
+
+    private static final Logger LOG = Logger.getLogger(AbstractJwtAuthenticationManager.class);
+
+    private JWSVerifier verifier;
+
+    @Value("${jwt_keystore_path}")
+    private String keystoreFile;
+
+    @Value("${jwt_keystore_pass}")
+    private String keystorePassword;
+
+    @Value("${jwt_token_signing_key_alias}")
+    private String keystoreAlias;
+
+    @PostConstruct
+    public void afterPropertiesSet() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
+        
+        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keystore.load(new FileInputStream(keystoreFile), keystorePassword.toCharArray());
+
+        Key key = keystore.getKey(keystoreAlias, keystorePassword.toCharArray());
+        if (key instanceof PrivateKey) {
+            // Get certificate of public key
+            Certificate cert = keystore.getCertificate(keystoreAlias);
+
+            // Get public key
+            RSAPublicKey publicKey = (RSAPublicKey) cert.getPublicKey();
+            this.verifier = new RSASSAVerifier(publicKey);
+        }
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) authentication;
+        JWT jwt = authenticationToken.getToken();
+        
+        if (jwt instanceof PlainJWT) {
+            handlePlainToken((PlainJWT) jwt);
+        } else if (jwt instanceof SignedJWT) {
+            handleSignedToken((SignedJWT) jwt);
+        } else if (jwt instanceof EncryptedJWT) {
+            handleEncryptedToken((EncryptedJWT) jwt);
+        }
+        
+        Date referenceTime = new Date();
+        JWTClaimsSet claims = authenticationToken.getClaims();
+        
+        Date expirationTime = claims.getExpirationTime();
+        if (expirationTime == null || expirationTime.before(referenceTime)) {
+            throw new JwtInvalidTokenException("The token is expired");
+        }
+        
+        Date notBeforeTime = claims.getNotBeforeTime();
+        if (notBeforeTime != null && notBeforeTime.after(referenceTime)) {
+            throw new JwtInvalidTokenException("Not before is after sysdate");
+        }
+
+        // FIXME use real assertion instead of token
+        String assertion = jwt.getParsedString();
+        String ssn = "(unknown)";
+        try {
+            ssn = jwt.getJWTClaimsSet().getStringClaim("hetu");
+            Assert.notNull(ssn, "Missing claim 'hetu' from authentication token");
+            
+            User userDetails = loadUserDetails(ssn);
+
+            authenticationToken.setDetails(userDetails);
+            authenticationToken.setAuthorities(userDetails.getAuthorities());
+            authenticationToken.setUuid(userDetails.getUsername());
+            authenticationToken.setAuthenticated(true);
+            
+            LOG.infoMap()
+                .set(END_USER, userDetails.getUsername())
+                .set(ACTION, "login")
+                .set(MSG, "success")
+                .set(AUTHENTICATION_ASSERTION, assertion)
+                .log();
+        } catch (ParseException | RuntimeException e) {
+            authenticationToken.setAuthenticated(false);
+            authenticationToken.setAuthorities(Collections.emptyList());
+            LOG.errorMap()
+                .set(END_USER, ssn)
+                .set(ACTION, "login")
+                .set(MSG, "fail")
+                .set(ERRORSTR, e.getMessage())
+                .set(AUTHENTICATION_ASSERTION, assertion)
+                .log();            
+        }
+        
+        return authenticationToken;
+    }
+
+    protected abstract User loadUserDetails(String ssn);
+    
+    private void handlePlainToken(PlainJWT jwt) {
+        throw new JwtInvalidTokenException("Unsecured plain tokens are not supported");
+    }
+    
+    private void handleSignedToken(SignedJWT jwt) {
+        try {
+            if (!jwt.verify(verifier)) {
+                throw new JwtInvalidTokenException("Signature validation failed");
+            }
+        } catch (JOSEException e) {
+            throw new JwtInvalidTokenException("Signature validation failed");
+        }
+    }
+    
+    private void handleEncryptedToken(EncryptedJWT jwt) {
+        throw new UnsupportedOperationException("Unsupported token type");
+    }
+}
