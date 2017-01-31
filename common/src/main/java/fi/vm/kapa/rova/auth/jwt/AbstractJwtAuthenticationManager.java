@@ -22,22 +22,21 @@
  */
 package fi.vm.kapa.rova.auth.jwt;
 
-import static fi.vm.kapa.rova.logging.Logger.Field.*;
-
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.*;
 import fi.vm.kapa.rova.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.*;
@@ -47,6 +46,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
+
+import static fi.vm.kapa.rova.logging.Logger.Field.*;
 
 public abstract class AbstractJwtAuthenticationManager implements AuthenticationManager {
 
@@ -114,13 +115,16 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
             ssn = jwt.getJWTClaimsSet().getStringClaim("hetu");
             Assert.notNull(ssn, "Missing claim 'hetu' from authentication token");
             
-            User userDetails = loadUserDetails(ssn);
+            User userDetails = loadUserDetails(jwt.getJWTClaimsSet());
+            if (userDetails == null) {
+                throw new AuthenticationCredentialsNotFoundException("Cannot create user from JWT claims");
+            }
 
             authenticationToken.setDetails(userDetails);
             authenticationToken.setAuthorities(userDetails.getAuthorities());
             authenticationToken.setUuid(userDetails.getUsername());
             authenticationToken.setAuthenticated(true);
-            
+
             LOG.infoMap()
                 .set(END_USER, userDetails.getUsername())
                 .set(ACTION, "login")
@@ -136,13 +140,14 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
                 .set(MSG, "fail")
                 .set(ERRORSTR, e.getMessage())
                 .set(AUTHENTICATION_ASSERTION, assertion)
-                .log();            
+                .log();
+            throw new AuthenticationServiceException(e.getMessage(), e);
         }
         
         return authenticationToken;
     }
 
-    protected abstract User loadUserDetails(String ssn);
+    protected abstract User loadUserDetails(JWTClaimsSet claims) throws ParseException;
     
     private void handlePlainToken(PlainJWT jwt) {
         throw new JwtInvalidTokenException("Unsecured plain tokens are not supported");
