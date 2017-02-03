@@ -32,7 +32,7 @@
     <name>roles-auths-parent</name>
 
     <properties>
-        <io.spring.platform-version>2.0.7.RELEASE</io.spring.platform-version>
+        <io.spring.platform-version>Athens-SR3</io.spring.platform-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <docker.image.prefix>docker-registry.kapa.ware.fi</docker.image.prefix>
         <spotify-docker.version>0.3.1</spotify-docker.version>
@@ -56,6 +56,13 @@
         <dependencies>
             <!-- bom deps -->
             <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Camden.SR4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.glassfish.jersey</groupId>
                 <artifactId>jersey-bom</artifactId>
                 <version>${jersey.version}</version>
@@ -69,15 +76,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-config</artifactId>
-                <version>1.2.2.RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- /bom deps -->
-
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
