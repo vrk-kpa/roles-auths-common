@@ -24,6 +24,7 @@ package fi.vm.kapa.rova.auth.jwt;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.*;
 import fi.vm.kapa.rova.logging.Logger;
@@ -35,6 +36,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
@@ -55,29 +57,36 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
 
     private JWSVerifier verifier;
 
-    @Value("${jwt_keystore_path}")
+    @Value("${jwt_keystore_path:}")
     private String keystoreFile;
 
-    @Value("${jwt_keystore_pass}")
+    @Value("${jwt_keystore_pass:}")
     private String keystorePassword;
 
-    @Value("${jwt_token_signing_key_alias}")
+    @Value("${jwt_token_signing_key_alias:}")
     private String keystoreAlias;
 
+    @Value("${jwt_shared_secret:}")
+    private String sharedSecret;
+
     @PostConstruct
-    public void afterPropertiesSet() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException {
-        
-        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keystore.load(new FileInputStream(keystoreFile), keystorePassword.toCharArray());
+    public void afterPropertiesSet() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, JOSEException {
 
-        Key key = keystore.getKey(keystoreAlias, keystorePassword.toCharArray());
-        if (key instanceof PrivateKey) {
-            // Get certificate of public key
-            Certificate cert = keystore.getCertificate(keystoreAlias);
+        if (!StringUtils.isEmpty(sharedSecret)) {
+            this.verifier = new MACVerifier(sharedSecret);
+        } else {
+            KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keystore.load(new FileInputStream(keystoreFile), keystorePassword.toCharArray());
 
-            // Get public key
-            RSAPublicKey publicKey = (RSAPublicKey) cert.getPublicKey();
-            this.verifier = new RSASSAVerifier(publicKey);
+            Key key = keystore.getKey(keystoreAlias, keystorePassword.toCharArray());
+            if (key instanceof PrivateKey) {
+                // Get certificate of public key
+                Certificate cert = keystore.getCertificate(keystoreAlias);
+
+                // Get public key
+                RSAPublicKey publicKey = (RSAPublicKey) cert.getPublicKey();
+                this.verifier = new RSASSAVerifier(publicKey);
+            }
         }
     }
 
@@ -108,11 +117,9 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
             throw new JwtInvalidTokenException("Not before is after sysdate");
         }
 
-        // FIXME use real assertion instead of token
-        String assertion = jwt.getParsedString();
-        String ssn = "(unknown)";
+        String ssn = parseSSN(jwt);
+        String assertion = parseAssertion(jwt, ssn);
         try {
-            ssn = jwt.getJWTClaimsSet().getStringClaim("hetu");
             Assert.notNull(ssn, "Missing claim 'hetu' from authentication token");
             
             User userDetails = loadUserDetails(jwt.getJWTClaimsSet());
@@ -145,6 +152,39 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
         }
         
         return authenticationToken;
+    }
+
+    private String parseSSN(JWT jwt) {
+        try {
+            return jwt.getJWTClaimsSet().getStringClaim("hetu");
+        } catch (ParseException e) {
+            LOG.errorMap()
+                    .set(END_USER, "(unknown)")
+                    .set(ACTION, "login")
+                    .set(MSG, "fail")
+                    .set(ERRORSTR, e.getMessage())
+                    .log();
+            throw new AuthenticationCredentialsNotFoundException(e.getMessage(), e);
+        }
+    }
+
+    private String parseAssertion(JWT jwt, String ssn) {
+        String assertion;
+        try {
+            assertion = jwt.getJWTClaimsSet().getStringClaim("samlAssertionID");
+        } catch (ParseException e) {
+            LOG.errorMap()
+                    .set(END_USER, ssn)
+                    .set(ACTION, "login")
+                    .set(MSG, "fail")
+                    .set(ERRORSTR, e.getMessage())
+                    .log();
+            throw new AuthenticationServiceException(e.getMessage(), e);
+        }
+        if (StringUtils.isEmpty(assertion)) {
+            assertion = jwt.getParsedString();
+        }
+        return assertion;
     }
 
     protected abstract User loadUserDetails(JWTClaimsSet claims) throws ParseException;
