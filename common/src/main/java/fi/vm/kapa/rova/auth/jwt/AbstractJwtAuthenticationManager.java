@@ -57,6 +57,14 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
 
     private JWSVerifier verifier;
 
+    public enum JWTMethod {
+        KEY,
+        SHAREDSECRET
+    }
+
+    @Value("${jwt_method}")
+    private JWTMethod jwtMethod;
+
     @Value("${jwt_keystore_path:}")
     private String keystoreFile;
 
@@ -72,9 +80,22 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
     @PostConstruct
     public void afterPropertiesSet() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, JOSEException {
 
-        if (!StringUtils.isEmpty(sharedSecret)) {
+        if (JWTMethod.SHAREDSECRET.equals(jwtMethod)) {
+            if (StringUtils.isEmpty(sharedSecret)) {
+                throw new RuntimeException("jwt_shared_secret property must be set");
+            }
             this.verifier = new MACVerifier(sharedSecret);
-        } else {
+        } else if (JWTMethod.KEY.equals(jwtMethod)){
+            if (StringUtils.isEmpty(keystoreFile)) {
+                throw new RuntimeException("jwt_keystore_path property must be set");
+            }
+            if (StringUtils.isEmpty(keystorePassword)) {
+                throw new RuntimeException("jwt_keystore_pass property must be set");
+            }
+            if (StringUtils.isEmpty(keystoreAlias)) {
+                throw new RuntimeException("jwt_token_signing_key_alias property must be set");
+            }
+
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(new FileInputStream(keystoreFile), keystorePassword.toCharArray());
 
@@ -87,6 +108,8 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
                 RSAPublicKey publicKey = (RSAPublicKey) cert.getPublicKey();
                 this.verifier = new RSASSAVerifier(publicKey);
             }
+        } else {
+            throw new RuntimeException("Unknown JWT verification method: " + jwtMethod);
         }
     }
 
