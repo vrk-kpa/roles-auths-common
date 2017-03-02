@@ -26,6 +26,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.kapa.rova.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +73,40 @@ public class ValidationUtil {
         headers.putSingle(HASH_HEADER_NAME, hash);
         headers.putSingle(TIMESTAMP_HEADER_NAME, timestamp);
     }
+
+
+    /**
+     * Append valdation headers to outgoing HttpRequest instance
+     * Assumes that given body byte[] is a String
+     * @param request
+     * @param body
+     * @throws IOException
+     */
+    public void appendValidationHeaders(HttpRequest request, byte[] body) throws IOException {
+        long timestamp = System.currentTimeMillis();
+        String hashData = buildValidationHashData(request, body, timestamp);
+        String hash = HashGenerator.hash(hashData, apiKey);
+        HttpHeaders headers = request.getHeaders();
+        headers.add(HASH_HEADER_NAME, hash);
+        headers.add(TIMESTAMP_HEADER_NAME, ""+timestamp);
+    }
+
+    private String buildValidationHashData(HttpRequest request, byte[] body, long timestamp) throws JsonProcessingException {
+        StringBuilder data = new StringBuilder();
+        data.append(request.getURI().getPath());
+        String query = request.getURI().getQuery();
+        if (!StringUtils.isBlank(query) ) {
+            data.append("?");
+            data.append(query);
+        }
+        data.append(timestamp);
+
+        if (body != null) {
+            data.append(new String(body));
+        }
+        return data.toString();
+    }
+
 
     private String buildValidationHashData(ClientRequestContext context, long timestamp) throws JsonProcessingException {
         StringBuilder data = new StringBuilder();
