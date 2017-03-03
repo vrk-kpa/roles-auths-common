@@ -1,17 +1,17 @@
 /**
  * The MIT License
  * Copyright (c) 2016 Population Register Centre
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,7 +22,6 @@
  */
 package fi.vm.kapa.rova.rest.exception;
 
-import com.oracle.javafx.jmx.json.JSONException;
 import fi.vm.kapa.rova.logging.Logger;
 import fi.vm.kapa.rova.logging.MDCFilter;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +34,8 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import javax.ws.rs.WebApplicationException;
 import java.util.HashMap;
@@ -55,10 +56,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
-    @ExceptionHandler(JSONException.class)
-    protected ResponseEntity<Object> jsonProcessingException(JSONException e, WebRequest request) {
+    @ExceptionHandler(JsonProcessingException.class)
+    protected ResponseEntity<Object> jsonProcessingException(JsonProcessingException e, WebRequest request) {
         LOG.error("Unhandled JSONException: ", e);
-        return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(e, buildEntity(new JsonMappingException("HTTP 400 Invalid JSON data")), getJsonHeader(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(SystemException.class)
