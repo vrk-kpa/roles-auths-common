@@ -20,16 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package fi.vm.kapa.rova.external.model.ytj;
+package fi.vm.kapa.rova.rest.validation;
 
-public class CompanyAuthorizationDataRequest {
-    private String ssn;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
 
-    public String getSsn() {
-        return ssn;
+import java.io.IOException;
+
+public class ValidationRequestInterceptor implements ClientHttpRequestInterceptor {
+    private ValidationUtil validationUtil;
+    public static final String ORIG_REQUEST_IDENTIFIER = "X-request-id";
+    public static final String ORIG_END_USER = "X-orig-userId";
+
+    public ValidationRequestInterceptor(String apiKey, int requestAliveSeconds, String pathPrefix) {
+        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds, pathPrefix);
     }
 
-    public void setSsn(String ssn) {
-        this.ssn = ssn;
+    @Override
+    public ClientHttpResponse intercept(
+            HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+            throws IOException {
+
+        validationUtil.appendValidationHeaders(request, body);
+        return execution.execute(request, body);
     }
 }
