@@ -28,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.RequestAttributes;
@@ -73,6 +74,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         LOG.error("SystemException: " + e.toString());
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.valueOf(e.getResponse().getStatus()), request);
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<Object> accessDeniedException(AccessDeniedException e, WebRequest request) {
+        LOG.error("SystemException: " + e.toString());
+        return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.FORBIDDEN, request);
+    }
+
 
     private HttpHeaders getJsonHeader() {
         HttpHeaders headers = new HttpHeaders();
