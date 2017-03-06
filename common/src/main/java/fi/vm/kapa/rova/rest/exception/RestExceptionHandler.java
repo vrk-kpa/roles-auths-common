@@ -71,13 +71,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(WebApplicationException.class)
     protected ResponseEntity<Object> webApplicationException(WebApplicationException e, WebRequest request) {
-        LOG.error("SystemException: " + e.toString());
+        LOG.error("WebApplicationException: " + e.toString());
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.valueOf(e.getResponse().getStatus()), request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<Object> accessDeniedException(AccessDeniedException e, WebRequest request) {
-        LOG.error("SystemException: " + e.toString());
+        LOG.error("AccessDenied: " + e.toString());
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.FORBIDDEN, request);
     }
 
