@@ -45,7 +45,7 @@ public final class YUtils {
     }
 
     public static boolean isYFormatValid(final String ytunnus) {
-        return ytunnus != null ? ytunnus.matches("\\d{6,7}[-]\\d{1}") : false;
+        return ytunnus != null ? ytunnus.matches("\\d{7}[-]\\d{1}") : false;
     }
 
     public static boolean isChecksumCharacterValid(final String ytunnus) {
@@ -70,7 +70,7 @@ public final class YUtils {
     public static void main(String[] args) {
         String testYtunnus = "1572860-0"; // ok
         String testYtunnus2 = "0737546-2"; // ok
-        String testYtunnus3 = "073754-3"; // ok, 6 digits
+        String testYtunnus3 = "173754-9"; // nok, 6 digits
         String testYtunnus4 = "0737546-3"; // nok, wrong checksum
         String testYtunnus5 = "07375468-3"; // nok, wrong format
         System.out.println(testYtunnus +" is "+ (isYTunnusValid(testYtunnus) ? "valid" : "not valid") );
