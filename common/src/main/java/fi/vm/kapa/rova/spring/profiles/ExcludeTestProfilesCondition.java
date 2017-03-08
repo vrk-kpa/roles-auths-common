@@ -37,7 +37,7 @@ public class ExcludeTestProfilesCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Environment environment = context.getEnvironment();
-        return !environment.acceptsProfiles(SpringProfiles.DEV, SpringProfiles.TEST);
+        return !environment.acceptsProfiles(SpringProfiles.DEV, SpringProfiles.ITEST);
     }
 
 }
