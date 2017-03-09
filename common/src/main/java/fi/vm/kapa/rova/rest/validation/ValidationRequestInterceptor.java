@@ -34,8 +34,8 @@ public class ValidationRequestInterceptor implements ClientHttpRequestIntercepto
     public static final String ORIG_REQUEST_IDENTIFIER = "X-request-id";
     public static final String ORIG_END_USER = "X-orig-userId";
 
-    public ValidationRequestInterceptor(String apiKey, int requestAliveSeconds, String pathPrefix) {
-        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds, pathPrefix);
+    public ValidationRequestInterceptor(String apiKey, int requestAliveSeconds) {
+        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds);
     }
 
     @Override

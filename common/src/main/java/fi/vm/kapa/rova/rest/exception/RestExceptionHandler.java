@@ -22,6 +22,8 @@
  */
 package fi.vm.kapa.rova.rest.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import fi.vm.kapa.rova.logging.Logger;
 import fi.vm.kapa.rova.logging.MDCFilter;
 import org.springframework.http.HttpHeaders;
@@ -35,10 +37,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
-import javax.ws.rs.WebApplicationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +71,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WebApplicationException.class)
     protected ResponseEntity<Object> webApplicationException(WebApplicationException e, WebRequest request) {
         LOG.error("WebApplicationException: " + e.toString());
-        return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.valueOf(e.getResponse().getStatus()), request);
+        return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.valueOf(e.getStatus()), request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

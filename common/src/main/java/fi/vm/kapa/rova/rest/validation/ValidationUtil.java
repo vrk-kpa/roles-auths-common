@@ -59,6 +59,10 @@ public class ValidationUtil {
         this.pathPrefix = pathPrefix == null ? "" : pathPrefix;
     }
     
+    public ValidationUtil(String apiKey, int requestAliveSeconds) {
+        this(apiKey, requestAliveSeconds, null);
+    }
+
     /**
      * Append validation headers to an outbound client request
      *
