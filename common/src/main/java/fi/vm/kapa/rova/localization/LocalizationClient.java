@@ -56,7 +56,7 @@ public class LocalizationClient extends AbstractClient {
                 cSb.append("/");
             }
         }
-        return getGeneric(format("/rest/localization/{0}/{1}/[2}", lang, key, cSb.toString()), new GenericType<String>() {});
+        return getGeneric(format("/rest/localization/{0}/{1}/{2}", lang, key, cSb.toString()), new GenericType<String>() {});
     }
 
     @Override
