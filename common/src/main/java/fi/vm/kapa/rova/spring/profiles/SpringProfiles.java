@@ -23,7 +23,7 @@
 package fi.vm.kapa.rova.spring.profiles;
 
 public final class SpringProfiles {
-    public static final String PROD = "default";
+    public static final String DEFAULT = "default"; // aka. production
     public static final String TEST = "test";
     public static final String ITEST = "itest";
     public static final String DEV = "dev";
@@ -33,7 +33,7 @@ public final class SpringProfiles {
 
 
     // negations
-    public static final String NOT_PROD = "!default";
+    public static final String NOT_DEFAULT= "!default";
     public static final String NOT_TEST = "!test";
     public static final String NOT_ITEST = "!itest";
     public static final String NOT_DEV = "!dev";
