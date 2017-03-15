@@ -74,6 +74,17 @@ public class AbstractClient {
         return client;
     }
 
+    protected Client getClient(Object... extraFeatures) {
+        ClientConfig clientConfig = new ClientConfig();
+        Client client = ClientBuilder.newClient(clientConfig);
+        client.register(new LoggingClientRequestFilter());
+        client.register(JacksonFeature.class);
+        for (Object feature : extraFeatures) {
+            client.register(feature);
+        }
+        return client;
+    }
+
     protected Map<String, Object> queryParams(String... params) {
         Validate.noNullElements(params);
         Validate.isTrue(params.length % 2 == 0, "Params length not even, can't form key-value pairs");
