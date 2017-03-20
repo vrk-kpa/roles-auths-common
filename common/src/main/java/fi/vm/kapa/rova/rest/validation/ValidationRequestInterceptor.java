@@ -31,8 +31,6 @@ import java.io.IOException;
 
 public class ValidationRequestInterceptor implements ClientHttpRequestInterceptor {
     private ValidationUtil validationUtil;
-    public static final String ORIG_REQUEST_IDENTIFIER = "X-request-id";
-    public static final String ORIG_END_USER = "X-orig-userId";
 
     public ValidationRequestInterceptor(String apiKey, int requestAliveSeconds) {
         validationUtil = new ValidationUtil(apiKey, requestAliveSeconds);
