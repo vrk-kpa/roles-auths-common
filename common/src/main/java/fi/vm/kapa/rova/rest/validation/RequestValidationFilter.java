@@ -22,11 +22,14 @@
  */
 package fi.vm.kapa.rova.rest.validation;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,10 +52,14 @@ public class RequestValidationFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         ServletRequest bufferedRequest = new BufferingHttpServletRequestWrapper((HttpServletRequest) servletRequest);
-        validationUtil.checkValidationHeaders((HttpServletRequest) bufferedRequest);
-        filterChain.doFilter(bufferedRequest, servletResponse);
+        if (validationUtil.checkValidationHeaders((HttpServletRequest) bufferedRequest)) {
+            filterChain.doFilter(bufferedRequest, servletResponse);
+            return;
+        }
+        ((HttpServletResponse) servletResponse).setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Override
