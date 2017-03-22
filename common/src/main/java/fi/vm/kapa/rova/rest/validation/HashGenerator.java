@@ -50,11 +50,9 @@ public class HashGenerator {
             SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), HMAC_ALGORITHM);
             mac.init(signingKey);
             byte[] rawHmac = mac.doFinal(data.getBytes());
-            String result = new String(Base64.getEncoder().encode(rawHmac));
-            return result;
+            return new String(Base64.getEncoder().encode(rawHmac));
         } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalStateException e) {
             throw new IOException("Cannot create hash", e);
         }
     }
-
 }

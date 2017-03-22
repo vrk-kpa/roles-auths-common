@@ -38,6 +38,7 @@ import javax.ws.rs.core.UriInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 
@@ -95,7 +96,7 @@ public class ValidationUtil {
         headers.add(TIMESTAMP_HEADER_NAME, ""+timestamp);
     }
 
-    private String buildValidationHashData(HttpRequest request, byte[] body, long timestamp) throws JsonProcessingException {
+    private String buildValidationHashData(HttpRequest request, byte[] body, long timestamp) {
         StringBuilder data = new StringBuilder();
         data.append(request.getURI().getPath());
         String query = request.getURI().getQuery();
@@ -196,7 +197,7 @@ public class ValidationUtil {
         return hash.equals(HashGenerator.hash(data, apiKey));
     }
 
-    private String getPathWithParams(UriInfo uInfo) throws java.io.UnsupportedEncodingException {
+    private String getPathWithParams(UriInfo uInfo) throws UnsupportedEncodingException {
         String requestUri = (URLDecoder.decode(uInfo.getRequestUri().toString(), Charset.defaultCharset().toString()));
         String path = requestUri.substring(uInfo.getBaseUri().toString().length());
         return path;
