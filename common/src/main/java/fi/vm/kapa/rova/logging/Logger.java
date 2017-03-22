@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
-public class Logger {
+public final class Logger {
 
     /**
      * {@value} 
