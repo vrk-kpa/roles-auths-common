@@ -22,32 +22,34 @@
  */
 package fi.vm.kapa.rova.rest.exception;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
+public class Error {
 
-import java.io.IOException;
+    private String ReqID;
+    private String errorMessage;
+    private int errorCode;
 
-/**
- * Created by jkorkala on 22/03/2017.
- */
-public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor {
-
-    private static ObjectMapper objectMapper = new ObjectMapper();
-
-    @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-            throws IOException {
-
-        ClientHttpResponse response = execution.execute(request, body);
-
-        if (response.getStatusCode().value() >= 400) {
-            Error error = objectMapper.readValue(body, Error.class);
-            throw new HttpStatusException("Got error response", error);
-        }
-
-        return response;
+    public String getReqID() {
+        return ReqID;
     }
+
+    public void setReqID(String reqID) {
+        ReqID = reqID;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
+
 }
