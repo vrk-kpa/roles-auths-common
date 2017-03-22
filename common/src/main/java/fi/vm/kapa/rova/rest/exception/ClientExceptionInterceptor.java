@@ -48,7 +48,7 @@ public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor 
         if (response.getStatusCode().value() >= 400) {
             Error error = null;
             try {
-                error = objectMapper.readValue(body, Error.class);
+                error = objectMapper.readValue(response.getBody(), Error.class);
             } catch (IOException e) {
                 LOG.info("Could not parse error message from message with status=" + response.getStatusCode());
                 return response;
