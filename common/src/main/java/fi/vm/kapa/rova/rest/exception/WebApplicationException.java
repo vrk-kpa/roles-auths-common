@@ -66,6 +66,7 @@ public class WebApplicationException extends RuntimeException {
 
     public WebApplicationException(Throwable cause, int status) {
         super(cause);
+        this.status = status;
     }
 
     public int getStatus() {
