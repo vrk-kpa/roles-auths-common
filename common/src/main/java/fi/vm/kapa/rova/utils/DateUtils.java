@@ -22,17 +22,18 @@
  */
 package fi.vm.kapa.rova.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class DateUtils {
     public static final TimeZone FINNISH_TIMEZONE = TimeZone.getTimeZone("Europe/Helsinki");
-    
+
     private DateUtils() {
-        
+
     }
-    
+
     public static Date convertStartTime(Date date) {
         Calendar startCal = Calendar.getInstance();
         startCal.setTimeZone(FINNISH_TIMEZONE);
@@ -54,5 +55,8 @@ public class DateUtils {
         endCal.set(Calendar.MILLISECOND, 0);
         return endCal.getTime();
     }
-    
+
+    public static String format(Date date) {
+        return date != null ? new SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(date) : null;
+    }
 }
