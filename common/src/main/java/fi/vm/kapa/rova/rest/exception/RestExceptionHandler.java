@@ -38,9 +38,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
 
 /**
@@ -83,27 +80,29 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.FORBIDDEN, request);
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<Object> nullPointerException(NullPointerException e, WebRequest request) {
+        LOG.error("NullPointerException: " + e.toString());
+        return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
 
     private HttpHeaders getJsonHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(Error.ERROR_INCLUDED_HEADER_NAME, "true");
         return headers;
     }
 
-    private Map<String, Object> buildEntity(Throwable e) {
-        Map<String, Object> entity = new HashMap<>(3);
-        entity.put(REQUEST_ID, fetchRequestId());
-        entity.put("errorMessage", e.getMessage());
-        entity.put("errorCode", ExceptionType.OTHER_EXCEPTION.getCodeNumber());
-        return entity;
+    private Error buildEntity(Throwable e) {
+        return buildEntity(e, ExceptionType.OTHER_EXCEPTION.getCodeNumber());
     }
 
-    private Map<String, Object> buildEntity(Throwable e, int errorCode) {
-        Map<String, Object> entity = new HashMap<>(3);
-        entity.put(REQUEST_ID, fetchRequestId());
-        entity.put("errorMessage", e.getMessage());
-        entity.put("errorCode", errorCode);
-        return entity;
+    private Error buildEntity(Throwable e, int errorCode) {
+        Error error = new Error();
+        error.setReqID(fetchRequestId());
+        error.setErrorMessage(e.getMessage());
+        error.setErrorCode(errorCode);
+        return error;
     }
 
     private String fetchRequestId() {

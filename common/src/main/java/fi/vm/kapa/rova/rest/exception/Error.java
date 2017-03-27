@@ -24,6 +24,8 @@ package fi.vm.kapa.rova.rest.exception;
 
 public class Error {
 
+    public static final String ERROR_INCLUDED_HEADER_NAME = "X-RoVa-ErrorMessage-Included";
+
     private String ReqID;
     private String errorMessage;
     private int errorCode;
@@ -50,6 +52,11 @@ public class Error {
 
     public void setErrorCode(int errorCode) {
         this.errorCode = errorCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Error [ ReqId=" + ReqID + ", errorMessage=" + errorMessage + ", errorCode=" + errorCode + " ]";
     }
 
 }
