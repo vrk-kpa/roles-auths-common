@@ -38,4 +38,9 @@ public class HttpStatusException extends IOException {
         return error;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + ((error != null) ? ": " + error : "");
+    }
+
 }
