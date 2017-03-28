@@ -67,9 +67,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(WebApplicationException.class)
     protected ResponseEntity<Object> webApplicationException(WebApplicationException e, WebRequest request) {
-        LOG.error("WebApplicationException: " + e.toString());
         if (e.getStatus() == 204) {
-            return handleExceptionInternal(e, null , null, HttpStatus.valueOf(204), request);
+            return handleExceptionInternal(e, null, null, HttpStatus.valueOf(204), request);
+        }
+        if (e.getStatus() >= 400) {
+            LOG.error("WebApplicationException: " + e.toString());
         }
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.valueOf(e.getStatus()), request);
     }
