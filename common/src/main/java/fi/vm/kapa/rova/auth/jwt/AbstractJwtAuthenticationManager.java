@@ -222,7 +222,7 @@ public abstract class AbstractJwtAuthenticationManager implements Authentication
                 throw new JwtInvalidTokenException("Signature validation failed");
             }
         } catch (JOSEException e) {
-            throw new JwtInvalidTokenException("Signature validation failed");
+            throw new JwtInvalidTokenException("Signature validation failed", e);
         }
     }
     

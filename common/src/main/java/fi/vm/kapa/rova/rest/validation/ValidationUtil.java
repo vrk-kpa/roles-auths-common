@@ -35,7 +35,6 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -146,19 +145,19 @@ public class ValidationUtil {
             LOG.info("Found request without proper hash header: " + HASH_HEADER_NAME);
             return false;
         }
-        
-        if (requestAlive(timestamp)) {
-            byte[] entity = null;
-            if (context.getEntityStream() != null) {
-                entity = StreamUtils.copyToByteArray(context.getEntityStream());
-                context.setEntityStream(new ByteArrayInputStream(entity));
-            }
-            String path = getPathWithParams(context.getUriInfo());
-            String data = pathPrefix + "/" + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
-            return matches(hash, data, apiKey);
-        } else {
+
+        if (!requestAlive(timestamp)) {
             throw new IOException("Request timestamp ("+timestamp+") was older than "+requestAliveMillis + " ms");
         }
+
+        byte[] entity = null;
+        if (context.getEntityStream() != null) {
+            entity = StreamUtils.copyToByteArray(context.getEntityStream());
+            context.setEntityStream(new ByteArrayInputStream(entity));
+        }
+        String path = getPathWithParams(context.getUriInfo());
+        String data = pathPrefix + "/" + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
+        return matches(hash, data, apiKey);
     }
 
     public boolean checkValidationHeaders(HttpServletRequest request) throws IOException {
@@ -173,18 +172,17 @@ public class ValidationUtil {
             throw new IOException("Found request without proper hash header: " + HASH_HEADER_NAME);
         }
 
-        if (requestAlive(timestamp)) {
-            byte[] entity = null;
-            if (request.getMethod().matches("POST|PUT|DELETE")) {
-                entity = StreamUtils.copyToByteArray(request.getInputStream());
-            }
-
-            String path = getPathWithParams(request);
-            String data = pathPrefix  + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
-            return matches(hash, data, apiKey);
-        } else {
+        if (!requestAlive(timestamp)) {
             throw new IOException("Request timestamp ("+timestamp+") was older than "+requestAliveMillis + " ms");
         }
+        byte[] entity = null;
+        if (request.getMethod().matches("POST|PUT|DELETE")) {
+            entity = StreamUtils.copyToByteArray(request.getInputStream());
+        }
+
+        String path = getPathWithParams(request);
+        String data = pathPrefix  + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
+        return matches(hash, data, apiKey);
     }
 
 

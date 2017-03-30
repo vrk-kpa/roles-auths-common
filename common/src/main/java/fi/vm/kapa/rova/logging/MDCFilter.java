@@ -23,7 +23,6 @@
 package fi.vm.kapa.rova.logging;
 
 import fi.vm.kapa.rova.utils.RemoteAddressResolver;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -36,7 +35,6 @@ import java.io.IOException;
 import java.util.Random;
 
 import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
 public class MDCFilter implements Filter {
@@ -62,26 +60,26 @@ public class MDCFilter implements Filter {
     }
     public String fetchRequestId() {
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
-        if (attrs != null) {
-            String requestId = (String) attrs.getAttribute(REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
-            if (requestId == null) {
-                HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs).getRequest();
-                requestId = httpRequest.getHeader(REQUEST_ID);
-
-                if (requestId == null) {
-                    StringBuilder sb = new StringBuilder(15);
-                    for (int i = 0; i < 15; i++) {
-                        sb.append(ALPHANUMERICS.charAt(random.nextInt(ALPHANUMERICS.length())));
-                    }
-                    requestId = sb.toString();
-                }
-                attrs.setAttribute(REQUEST_ID, requestId, RequestAttributes.SCOPE_REQUEST);
-            }
-
-            return requestId;
-        } else {
+        if (attrs == null) {
             return NO_REQUEST_ID;
         }
+
+        String requestId = (String) attrs.getAttribute(REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
+        if (requestId == null) {
+            HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs).getRequest();
+            requestId = httpRequest.getHeader(REQUEST_ID);
+
+            if (requestId == null) {
+                StringBuilder sb = new StringBuilder(15);
+                for (int i = 0; i < 15; i++) {
+                    sb.append(ALPHANUMERICS.charAt(random.nextInt(ALPHANUMERICS.length())));
+                }
+                requestId = sb.toString();
+            }
+            attrs.setAttribute(REQUEST_ID, requestId, RequestAttributes.SCOPE_REQUEST);
+        }
+
+        return requestId;
     }
 
     @Override

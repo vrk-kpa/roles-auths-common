@@ -54,7 +54,7 @@ public abstract class AbstractJwtAuthenticationFilter extends AbstractAuthentica
         setAuthenticationSuccessHandler(new AuthenticationSuccessHandler() {
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                    Authentication authentication) throws IOException, ServletException {
+                    Authentication authentication) {
                 // just continue to the requested URL
             }
         });
@@ -80,7 +80,7 @@ public abstract class AbstractJwtAuthenticationFilter extends AbstractAuthentica
             JwtAuthenticationToken token = new JwtAuthenticationToken(jwt);
             return authenticationManager.authenticate(token);
         } catch (ParseException e) {
-            throw new JwtInvalidTokenException("Invalid JWT token");
+            throw new JwtInvalidTokenException("Invalid JWT token", e);
         }
     }
     

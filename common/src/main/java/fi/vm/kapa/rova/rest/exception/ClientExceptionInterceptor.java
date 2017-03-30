@@ -55,7 +55,7 @@ public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor 
             LOG.info("Received error response: " + response.getRawStatusCode() + " (" + response.getStatusText()
                     + ") for request: " + fetchRequestId());
             if (responseHasError(response)) {
-                Error error = null;
+                Error error;
                 try {
                     error = objectMapper.readValue(response.getBody(), Error.class);
                 } catch (IOException e) {

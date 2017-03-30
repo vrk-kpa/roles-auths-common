@@ -30,27 +30,19 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class HetuUtils {
     private static final String CHECKSUM_CHARACTERS = "0123456789ABCDEFHJKLMNPRSTUVWXY";
-    private static volatile Map<Integer, Character> separators = new HashMap<Integer, Character>();
     private static volatile Map<Character, Integer> invertedSeparators = new HashMap<Character, Integer>();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 
     static {
-        separators.put(18, '+');
-        separators.put(19, '-');
-        separators.put(20, 'A');
-//        separators.put(21, 'B');
-
         invertedSeparators.put('+', 18);
         invertedSeparators.put('-', 19);
         invertedSeparators.put('A', 20);
-//        invertedSeparators.put('B', 21);
 
         DATE_FORMAT.setLenient(false);
     }
@@ -58,7 +50,6 @@ public final class HetuUtils {
     private HetuUtils() {
 
     }
-
 
     /**
      * Checks if a given Finnish National Identification Number is valid.

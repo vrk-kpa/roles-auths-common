@@ -22,9 +22,6 @@
  */
 package fi.vm.kapa.rova.rest.validation;
 
-import static fi.vm.kapa.rova.utils.EncodingUtils.encodePathParam;
-import static org.junit.Assert.*;
-
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,10 +31,12 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
+
+import static fi.vm.kapa.rova.utils.EncodingUtils.encodePathParam;
+import static org.junit.Assert.*;
 
 /**
  * Created by Juha Korkalainen on 23.2.2016.

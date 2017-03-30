@@ -23,8 +23,6 @@
 package fi.vm.kapa.rova.rest.validation;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
