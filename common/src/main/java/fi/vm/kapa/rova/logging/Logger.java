@@ -48,10 +48,11 @@ public final class Logger {
         DELEGATE_ID("delegate_id"), // delegaatin syntymäpäivä
         DELEGATE_NAME("delegate_name"), // delegaatin nimi
         DURATION("duration"), // kokonaiskesto
+        END_DATE("end_date"), // (valtuuden) alkupäivämäärä
         END_USER("end_user"), // palvelun loppukäyttäjä
         ERRORSTR("error"), // virheviesti
-        ISSUES("issues"), // valtakirjan (mandaten) asia(t)
-        MANDATE_UUID("mandate_uuid"), // valtakirjan (mandaten) id
+        ISSUES("issues"), // valtuuden (mandaten) asia(t)
+        MANDATE_UUID("mandate_uuid"), // valtuuden (mandaten) id
         MSG("msg"), // yleinen viesti
         OPERATION("operation"),
         PRINCIPAL_COUNT("principal_count"), //  principalcount (jos delegate-haku)
@@ -70,7 +71,8 @@ public final class Logger {
         SERVICE_WEB_API_ID("web_api_service_id"), // service web api identifier
         SERVICE_WEB_API_SESSION_ID("web_api_session_id"), // service web api identifier
         SERVICE_REQUEST_IDENTIFIER("xrd_service_request_identifier"),
-        SUBJECT("subject"), // valtakirjan (mandaten) tarkemmin yksilöivä tunniste
+        START_DATE("start_date"), // (valtuuden) loppupäivämäärä
+        SUBJECT("subject"), // valtuuden (mandaten) tarkemmin yksilöivä tunniste
         TARGET_USER("target_user"),
         TYPE("type"), // log type
         WARNINGSTR("warning"), // varoitusviesti
