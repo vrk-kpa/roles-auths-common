@@ -32,6 +32,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
 
 /**
@@ -47,61 +48,40 @@ public class RequestIdentificationInterceptor implements ClientHttpRequestInterc
         DONT_TRUST_REQUEST_HEADERS
     }
 
-    private String requestId;
-    private String endUserId;
     private boolean allowValuesFromRequestHeaders;
 
     /**
-     * Creates a new RequestIdentificationFilter. Reads the request and end user identification from
-     * request attributes or headers.
+     * Creates a new RequestIdentificationFilter. Reads the request and end user
+     * identification from request attributes or headers.
      *
-     * @param trustHeaders Whether the identification data in current HTTP request headers should be trusted.
-     *                     Set to DONT_TRUST_REQUEST_HEADERS if the request originates from a browser.
+     * @param trustHeaders
+     *            Whether the identification data in current HTTP request
+     *            headers should be trusted. Set to DONT_TRUST_REQUEST_HEADERS
+     *            if the request originates from a browser.
      */
     public RequestIdentificationInterceptor(RequestIdentificationInterceptor.HeaderTrust trustHeaders) {
-        this(null, null, trustHeaders);
-    }
-
-    /**
-     * Creates a new RequestIdentificationFilter. Reads the request and end user identification from
-     * request attributes or headers. The provided identification data overrides request attributes, but not
-     * request headers (if header trust is set to TRUST_REQUEST_HEADERS).
-     *
-     * @param requestId    Current request identifier.
-     * @param endUserId    Current end user identifier.
-     * @param trustHeaders Whether the identification data in current HTTP request headers should be trusted.
-     *                     Set to DONT_TRUST_REQUEST_HEADERS if the request originates from a browser.
-     */
-    public RequestIdentificationInterceptor(String requestId, String endUserId, RequestIdentificationInterceptor.HeaderTrust trustHeaders) {
-        this.requestId = requestId;
-        this.endUserId = endUserId;
         this.allowValuesFromRequestHeaders = (trustHeaders == RequestIdentificationInterceptor.HeaderTrust.TRUST_REQUEST_HEADERS);
     }
-
 
     @Override
     public ClientHttpResponse intercept(
             HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
             throws IOException {
 
-        intercept(ORIG_REQUEST_IDENTIFIER, request, requestId);
-        intercept(ORIG_END_USER, request, endUserId);
+        intercept(ORIG_REQUEST_IDENTIFIER, request);
+        intercept(ORIG_END_USER, request);
         return execution.execute(request, body);
     }
 
-    private void intercept(String headerName, HttpRequest request, String newValue) {
+    private void intercept(String headerName, HttpRequest request) {
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
             String value = (String) attrs.getAttribute(headerName,
                     RequestAttributes.SCOPE_REQUEST);
-            if (newValue != null) {
-                value = newValue;
-            }
             if (value == null && allowValuesFromRequestHeaders) {
                 HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs)
                         .getRequest();
                 value = httpRequest.getHeader(headerName);
-
             }
             if (value != null) {
                 replaceHeaderValue(headerName, request.getHeaders(), value);
