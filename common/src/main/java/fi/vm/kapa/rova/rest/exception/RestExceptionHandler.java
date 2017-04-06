@@ -38,7 +38,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
+import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
 
 /**
  * Created by jkorkala on 03/03/2017.
@@ -111,7 +111,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private String fetchRequestId() {
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
-            return (String) attrs.getAttribute(REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
+            return (String) attrs.getAttribute(REQUEST_ID.toString(), RequestAttributes.SCOPE_REQUEST);
         } else {
             return MDCFilter.NO_REQUEST_ID;
         }

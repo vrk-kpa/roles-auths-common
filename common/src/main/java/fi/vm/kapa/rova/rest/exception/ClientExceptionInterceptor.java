@@ -35,7 +35,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import java.io.IOException;
 import java.util.List;
 
-import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
+import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
 
 /**
  * Created by jkorkala on 22/03/2017.
@@ -81,7 +81,7 @@ public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor 
     private String fetchRequestId() {
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
-            return (String) attrs.getAttribute(REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
+            return (String) attrs.getAttribute(REQUEST_ID.toString(), RequestAttributes.SCOPE_REQUEST);
         } else {
             return MDCFilter.NO_REQUEST_ID;
         }
