@@ -26,11 +26,9 @@ import static fi.vm.kapa.rova.logging.Logger.Field.CLIENT_IP;
 import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
 
 import fi.vm.kapa.rova.utils.RemoteAddressResolver;
+import fi.vm.kapa.rova.utils.RequestUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +43,7 @@ public class MDCFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        String reqId = fetchRequestId();
+        String reqId = RequestUtils.fetchRequestId();
         if (reqId != null) {
             MDC.put(REQUEST_ID.toString(), reqId);
         }
@@ -55,21 +53,6 @@ public class MDCFilter implements Filter {
         } finally {
             MDC.remove(REQUEST_ID.toString());
             MDC.remove(CLIENT_IP.toString());
-        }
-    }
-
-    public String fetchRequestId() {
-        RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
-        if (attrs != null) {
-            String requestId = (String) attrs.getAttribute(REQUEST_ID.toString(), RequestAttributes.SCOPE_REQUEST);
-            if (requestId == null) {
-                HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs).getRequest();
-                requestId = httpRequest.getHeader(REQUEST_ID.toString());
-            }
-
-            return requestId;
-        } else {
-            return NO_REQUEST_ID;
         }
     }
 

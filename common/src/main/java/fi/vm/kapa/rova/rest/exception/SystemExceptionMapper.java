@@ -23,6 +23,7 @@
 package fi.vm.kapa.rova.rest.exception;
 
 import fi.vm.kapa.rova.logging.Logger;
+import fi.vm.kapa.rova.utils.RequestUtils;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -44,7 +45,7 @@ public class SystemExceptionMapper extends AbstractExceptionMapper<SystemExcepti
     @Override
     protected Map<String, Object> buildEntity(SystemException e) {
         Map<String, Object> entity = new HashMap<>(2);
-        entity.put(REQUEST_ID.toString(), fetchRequestId());
+        entity.put(REQUEST_ID.toString(), RequestUtils.fetchRequestId());
         entity.put("errorMessage", e.getMessage());
         entity.put("errorCode", e.getCodeNumber());
         return entity;
