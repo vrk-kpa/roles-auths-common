@@ -1,6 +1,7 @@
 package fi.vm.kapa.rova.logging;
 
 import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
+import static fi.vm.kapa.rova.logging.MDCFilter.NO_REQUEST_ID;
 
 import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,6 @@ public class MDCInterceptor implements ClientHttpRequestInterceptor {
     private Random random;
 
     private static final String ALPHANUMERICS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // new ReqID is randomized from these chars
-    public static final String NO_REQUEST_ID = "no_request"; // will be shown as ReqID if logging outside request scope
 
     public MDCInterceptor() {
         random = new Random(System.currentTimeMillis());
