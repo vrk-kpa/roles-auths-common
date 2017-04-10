@@ -33,7 +33,7 @@ import java.util.Map;
 
 import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
 
-public abstract class AbstractExceptionMapper<T extends Throwable> implements org.glassfish.jersey.spi.ExtendedExceptionMapper<T> {
+public abstract class AbstractExceptionMapper<T extends Throwable> extends RequestUtils implements org.glassfish.jersey.spi.ExtendedExceptionMapper<T> {
 
     @Override
     public abstract Response toResponse(T e);
@@ -50,7 +50,7 @@ public abstract class AbstractExceptionMapper<T extends Throwable> implements or
 
     protected Map<String, Object> buildEntity(T e) {
         Map<String, Object> entity = new HashMap<>(3);
-        entity.put(REQUEST_ID.toString(), RequestUtils.fetchRequestId());
+        entity.put(REQUEST_ID.toString(), fetchRequestId());
         entity.put("errorMessage", e.getMessage());
         entity.put("errorCode", ExceptionType.OTHER_EXCEPTION.getCodeNumber());
         return entity;

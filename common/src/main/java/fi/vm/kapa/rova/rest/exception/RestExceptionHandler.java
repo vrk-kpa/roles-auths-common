@@ -98,7 +98,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private Error buildEntity(Throwable e, int errorCode) {
         Error error = new Error();
-        error.setReqID(RequestUtils.fetchRequestId());
+        error.setReqID(new RequestUtils().fetchRequestId());
         error.setErrorMessage(e.getMessage());
         error.setErrorCode(errorCode);
         return error;

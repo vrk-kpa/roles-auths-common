@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Created by jkorkala on 22/03/2017.
  */
-public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor {
+public class ClientExceptionInterceptor extends RequestUtils implements ClientHttpRequestInterceptor {
 
     private static final Logger LOG = Logger.getLogger(ClientExceptionInterceptor.class);
     private static ObjectMapper objectMapper = new ObjectMapper();
@@ -49,7 +49,7 @@ public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor 
 
         if (response.getStatusCode().value() >= 400) {
             LOG.info("Received error response: " + response.getRawStatusCode() + " (" + response.getStatusText()
-                    + ") for request: " + RequestUtils.fetchRequestId());
+                    + ") for request: " + fetchRequestId());
             if (responseHasError(response)) {
                 Error error;
                 try {

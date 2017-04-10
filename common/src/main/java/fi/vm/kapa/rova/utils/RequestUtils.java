@@ -2,17 +2,26 @@ package fi.vm.kapa.rova.utils;
 
 import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
 
-import fi.vm.kapa.rova.logging.MDCFilter;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Random;
+
 public class RequestUtils {
-    public static String fetchRequestId() {
+    private Random random;
+
+    private final String ALPHANUMERICS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // new ReqID is randomized from these chars
+
+    public static final String NO_REQUEST_ID = "no_request"; // will be shown as ReqID if logging outside request scope
+
+    public RequestUtils() {
+        random = new Random(System.currentTimeMillis());
+    }
+
+    public String fetchRequestId() {
         String requestId = null; 
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
@@ -22,9 +31,17 @@ public class RequestUtils {
                 requestId = httpRequest.getHeader(REQUEST_ID.toString());
             }
         }
-        requestId = StringUtils.isBlank(requestId) ? MDCFilter.NO_REQUEST_ID : requestId;
 
         return requestId;
+
+    }
+
+    public String createNewRequestId() {
+        StringBuilder sb = new StringBuilder(15);
+        for (int i = 0; i < 15; i++) {
+            sb.append(ALPHANUMERICS.charAt(random.nextInt(ALPHANUMERICS.length())));
+        }
+        return sb.toString();
     }
 
 }

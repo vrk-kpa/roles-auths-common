@@ -1,9 +1,8 @@
 package fi.vm.kapa.rova.logging;
 
 import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
-import static fi.vm.kapa.rova.logging.MDCFilter.NO_REQUEST_ID;
 
-import org.slf4j.MDC;
+import fi.vm.kapa.rova.utils.RequestUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -11,74 +10,39 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
-import java.util.Random;
 
-public class MDCInterceptor implements ClientHttpRequestInterceptor {
-    private Random random;
-
-    private static final String ALPHANUMERICS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // new ReqID is randomized from these chars
-
-    public MDCInterceptor() {
-        random = new Random(System.currentTimeMillis());
-    }
+public class MDCInterceptor extends RequestUtils implements ClientHttpRequestInterceptor {
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
         throws IOException {
 
-        Result result = fetchAndStoreRequestId(request);
-        if (!result.foundFromRequest) {
-            MDC.put(REQUEST_ID.toString(), result.requestId);
-        }
+        storeRequestId(request);
         return execution.execute(request, body);
     }
 
-    public Result fetchAndStoreRequestId(HttpRequest request) {
-        Result result = new Result();
-        result.foundFromRequest = true;
+    public void storeRequestId(HttpRequest request) {
+        String requestId = fetchRequestId();
+        if (requestId == null) {
+            requestId = createNewRequestId();
+            RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
 
-        RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
-        if (attrs != null) {
-            String requestId = (String) attrs.getAttribute(REQUEST_ID.toString(), RequestAttributes.SCOPE_REQUEST);
-            if (requestId == null) {
-                HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs).getRequest();
-                requestId = httpRequest.getHeader(REQUEST_ID.toString());
-
-                if (requestId == null) {
-                    StringBuilder sb = new StringBuilder(15);
-                    for (int i = 0; i < 15; i++) {
-                        sb.append(ALPHANUMERICS.charAt(random.nextInt(ALPHANUMERICS.length())));
-                    }
-                    requestId = sb.toString();
-                    result.foundFromRequest = false;
-                }
-
+            if (attrs != null) {
                 attrs.setAttribute(REQUEST_ID.toString(), requestId, RequestAttributes.SCOPE_REQUEST);
+                replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), requestId);
+            } else {
+                replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), NO_REQUEST_ID);
             }
-
-            replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), requestId);
-            result.requestId = requestId;
         } else {
-            replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), NO_REQUEST_ID);
-            result.requestId = NO_REQUEST_ID;
+            replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), requestId);
         }
-
-        return result;
     }
 
     private void replaceHeaderValue(String headerName,
             HttpHeaders headers, String value) {
         headers.remove(headerName);
         headers.add(headerName, value);
-    }
-    
-    class Result {
-        String requestId;
-        boolean foundFromRequest;
     }
 }

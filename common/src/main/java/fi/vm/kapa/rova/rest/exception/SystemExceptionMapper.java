@@ -45,7 +45,7 @@ public class SystemExceptionMapper extends AbstractExceptionMapper<SystemExcepti
     @Override
     protected Map<String, Object> buildEntity(SystemException e) {
         Map<String, Object> entity = new HashMap<>(2);
-        entity.put(REQUEST_ID.toString(), RequestUtils.fetchRequestId());
+        entity.put(REQUEST_ID.toString(), fetchRequestId());
         entity.put("errorMessage", e.getMessage());
         entity.put("errorCode", e.getCodeNumber());
         return entity;
