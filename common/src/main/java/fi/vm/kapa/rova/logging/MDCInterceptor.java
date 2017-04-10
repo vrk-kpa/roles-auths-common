@@ -13,7 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.IOException;
 
-public class MDCInterceptor extends RequestUtils implements ClientHttpRequestInterceptor {
+public class MDCInterceptor implements ClientHttpRequestInterceptor {
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
@@ -24,16 +24,16 @@ public class MDCInterceptor extends RequestUtils implements ClientHttpRequestInt
     }
 
     public void storeRequestId(HttpRequest request) {
-        String requestId = fetchRequestId();
+        String requestId = RequestUtils.fetchRequestId();
         if (requestId == null) {
-            requestId = createNewRequestId();
+            requestId = RequestUtils.createNewRequestId();
             RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
 
             if (attrs != null) {
                 attrs.setAttribute(REQUEST_ID.toString(), requestId, RequestAttributes.SCOPE_REQUEST);
                 replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), requestId);
             } else {
-                replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), NO_REQUEST_ID);
+                replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), RequestUtils.NO_REQUEST_ID);
             }
         } else {
             replaceHeaderValue(REQUEST_ID.toString(), request.getHeaders(), requestId);

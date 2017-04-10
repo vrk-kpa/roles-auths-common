@@ -22,18 +22,19 @@
  */
 package fi.vm.kapa.rova.rest.exception;
 
+import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
+
 import fi.vm.kapa.rova.utils.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
-
-public abstract class AbstractExceptionMapper<T extends Throwable> extends RequestUtils implements org.glassfish.jersey.spi.ExtendedExceptionMapper<T> {
+public abstract class AbstractExceptionMapper<T extends Throwable> implements org.glassfish.jersey.spi.ExtendedExceptionMapper<T> {
 
     @Override
     public abstract Response toResponse(T e);
@@ -50,7 +51,7 @@ public abstract class AbstractExceptionMapper<T extends Throwable> extends Reque
 
     protected Map<String, Object> buildEntity(T e) {
         Map<String, Object> entity = new HashMap<>(3);
-        entity.put(REQUEST_ID.toString(), fetchRequestId());
+        entity.put(REQUEST_ID.toString(), RequestUtils.fetchRequestId());
         entity.put("errorMessage", e.getMessage());
         entity.put("errorCode", ExceptionType.OTHER_EXCEPTION.getCodeNumber());
         return entity;

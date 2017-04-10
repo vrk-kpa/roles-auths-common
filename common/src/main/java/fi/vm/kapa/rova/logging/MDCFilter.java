@@ -29,40 +29,33 @@ import fi.vm.kapa.rova.utils.RemoteAddressResolver;
 import fi.vm.kapa.rova.utils.RequestUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
-public class MDCFilter extends RequestUtils implements Filter {
+public class MDCFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        String reqId = fetchRequestId();
-        boolean reqIdFound = true;
+        String reqId = RequestUtils.fetchRequestId();
         if (reqId == null) {
-            reqIdFound = false;
-            reqId = createNewRequestId();
-            servletRequest.setAttribute(REQUEST_ID.toString(), reqId);
+            reqId = RequestUtils.createNewRequestId();
         }
+
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        requestAttributes.setAttribute(REQUEST_ID.toString(), reqId, RequestAttributes.SCOPE_REQUEST);
 
         MDC.put(REQUEST_ID.toString(), reqId);
         MDC.put(CLIENT_IP.toString(), RemoteAddressResolver.resolve((HttpServletRequest)servletRequest));
 
         try {
-            if (reqIdFound) {
-                filterChain.doFilter(servletRequest, servletResponse);
-            } else {
-                CustomHttpServletRequest request = new CustomHttpServletRequest((HttpServletRequest)servletRequest);
-                request.addHeader(REQUEST_ID.toString(), reqId);
-                filterChain.doFilter(request, servletResponse);
-            }
+            filterChain.doFilter(servletRequest, servletResponse);
         } finally {
             MDC.remove(REQUEST_ID.toString());
             MDC.remove(CLIENT_IP.toString());
@@ -77,28 +70,5 @@ public class MDCFilter extends RequestUtils implements Filter {
     @Override
     public void destroy() {
         // NOP
-    }
-
-    private class CustomHttpServletRequest extends HttpServletRequestWrapper {
-
-        private Map<String, String> customHeaderMap = null;
-
-        public CustomHttpServletRequest(HttpServletRequest request) {
-            super(request);
-            customHeaderMap = new HashMap<>();
-        }
-
-        public void addHeader(String name, String value) {
-            customHeaderMap.put(name, value);
-        }
-
-        @Override
-        public String getParameter(String name) {
-            String paramValue = super.getParameter(name);
-            if (paramValue == null) {
-                paramValue = customHeaderMap.get(name);
-            }
-            return paramValue;
-        }
     }
 }

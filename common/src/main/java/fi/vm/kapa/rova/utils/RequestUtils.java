@@ -8,20 +8,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RequestUtils {
-    private Random random;
 
-    private final String ALPHANUMERICS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // new ReqID is randomized from these chars
+    private static final String ALPHANUMERICS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // new ReqID is randomized from these chars
 
     public static final String NO_REQUEST_ID = "no_request"; // will be shown as ReqID if logging outside request scope
 
-    public RequestUtils() {
-        random = new Random(System.currentTimeMillis());
-    }
-
-    public String fetchRequestId() {
+    public static String fetchRequestId() {
         String requestId = null; 
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
@@ -36,10 +31,11 @@ public class RequestUtils {
 
     }
 
-    public String createNewRequestId() {
+    public static String createNewRequestId() {
         StringBuilder sb = new StringBuilder(15);
+        ThreadLocalRandom randomizer = ThreadLocalRandom.current();
         for (int i = 0; i < 15; i++) {
-            sb.append(ALPHANUMERICS.charAt(random.nextInt(ALPHANUMERICS.length())));
+            sb.append(ALPHANUMERICS.charAt(randomizer.nextInt(ALPHANUMERICS.length())));
         }
         return sb.toString();
     }
