@@ -24,18 +24,14 @@ package fi.vm.kapa.rova.rest.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.kapa.rova.logging.Logger;
-import fi.vm.kapa.rova.logging.MDCFilter;
+import fi.vm.kapa.rova.utils.RequestUtils;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.io.IOException;
 import java.util.List;
-
-import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
 
 /**
  * Created by jkorkala on 22/03/2017.
@@ -53,7 +49,7 @@ public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor 
 
         if (response.getStatusCode().value() >= 400) {
             LOG.info("Received error response: " + response.getRawStatusCode() + " (" + response.getStatusText()
-                    + ") for request: " + fetchRequestId());
+                    + ") for request: " + RequestUtils.fetchRequestId());
             if (responseHasError(response)) {
                 Error error;
                 try {
@@ -76,15 +72,6 @@ public class ClientExceptionInterceptor implements ClientHttpRequestInterceptor 
             hasError = values.stream().anyMatch(value -> Boolean.parseBoolean(value));
         }
         return hasError;
-    }
-
-    private String fetchRequestId() {
-        RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
-        if (attrs != null) {
-            return (String) attrs.getAttribute(REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
-        } else {
-            return MDCFilter.NO_REQUEST_ID;
-        }
     }
 
 }

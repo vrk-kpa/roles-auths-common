@@ -107,6 +107,7 @@ public class LogbackConfigurator {
                 }
             }
 
+            @SuppressWarnings({ "rawtypes", "unchecked" })
             private Appender<IAccessEvent> getAccessLogAppender() {
                 LoggerContext lc = (LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory();
                 LayoutWrappingEncoder enc = new LayoutWrappingEncoder();

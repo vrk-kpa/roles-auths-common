@@ -25,7 +25,7 @@ package fi.vm.kapa.rova.rest.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import fi.vm.kapa.rova.logging.Logger;
-import fi.vm.kapa.rova.logging.MDCFilter;
+import fi.vm.kapa.rova.utils.RequestUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,12 +33,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import static fi.vm.kapa.rova.logging.Logger.REQUEST_ID;
 
 /**
  * Created by jkorkala on 03/03/2017.
@@ -102,18 +98,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private Error buildEntity(Throwable e, int errorCode) {
         Error error = new Error();
-        error.setReqID(fetchRequestId());
+        error.setReqID(RequestUtils.fetchRequestId());
         error.setErrorMessage(e.getMessage());
         error.setErrorCode(errorCode);
         return error;
     }
 
-    private String fetchRequestId() {
-        RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
-        if (attrs != null) {
-            return (String) attrs.getAttribute(REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
-        } else {
-            return MDCFilter.NO_REQUEST_ID;
-        }
-    }
 }

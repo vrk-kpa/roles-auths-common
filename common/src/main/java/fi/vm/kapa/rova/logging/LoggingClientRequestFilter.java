@@ -22,6 +22,8 @@
  */
 package fi.vm.kapa.rova.logging;
 
+import static fi.vm.kapa.rova.logging.Logger.Field.REQUEST_ID;
+
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -42,16 +44,16 @@ public class LoggingClientRequestFilter implements ClientRequestFilter {
     public void filter(ClientRequestContext requestContext) throws IOException {
         RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
-            String requestId = (String) attrs.getAttribute(Logger.REQUEST_ID, RequestAttributes.SCOPE_REQUEST);
+            String requestId = (String) attrs.getAttribute(REQUEST_ID.toString(), RequestAttributes.SCOPE_REQUEST);
             if (requestId != null) {
-                requestContext.getHeaders().remove(Logger.REQUEST_ID);
-                requestContext.getHeaders().add(Logger.REQUEST_ID, requestId);
+                requestContext.getHeaders().remove(REQUEST_ID.toString());
+                requestContext.getHeaders().add(REQUEST_ID.toString(), requestId);
             } else {
                 HttpServletRequest httpRequest = ((ServletRequestAttributes) attrs).getRequest();
-                requestId = httpRequest.getHeader(Logger.REQUEST_ID);
+                requestId = httpRequest.getHeader(REQUEST_ID.toString());
                 if (requestId != null) {
-                    requestContext.getHeaders().remove(Logger.REQUEST_ID);
-                    requestContext.getHeaders().add(Logger.REQUEST_ID, requestId);
+                    requestContext.getHeaders().remove(REQUEST_ID.toString());
+                    requestContext.getHeaders().add(REQUEST_ID.toString(), requestId);
                 }
             }
         }

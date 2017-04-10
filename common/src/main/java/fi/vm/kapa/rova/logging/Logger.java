@@ -63,6 +63,7 @@ public final class Logger {
         ORGANIZATION_ID("organization_id"),
         ORGANIZATION_ROLES("organization_roles"),
         REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
+        REQUEST_ID("ReqID"), // kutsuketjun tunnisteena käytetty id
         RESULT("result"), // allowed/disallowed-tulos
         SERVICE("service"), // Name of logging application
         SERVICE_UUID("service_uuid"), // service universally unique identifier
@@ -95,11 +96,10 @@ public final class Logger {
 
     private org.slf4j.Logger slf4jLogger; // actual logger inside this wrapper
 
-    public static final String REQUEST_ID = "ReqID";
-
     private Logger() {
     }
 
+    @SuppressWarnings("rawtypes")
     public static Logger getLogger(Class cls) {
         Logger logger = new Logger();
         logger.slf4jLogger = LoggerFactory.getLogger(cls);
@@ -227,6 +227,7 @@ public final class Logger {
             return this.set(field.toString(), value);
         }
 
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         public LogMap add(String key, Object value) {
             if (!entries.containsKey(key)) {
                 return set(key, value);
