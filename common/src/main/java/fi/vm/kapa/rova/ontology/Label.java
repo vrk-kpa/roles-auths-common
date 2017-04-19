@@ -27,6 +27,14 @@ public class Label {
     private String lang;
     private String label;
 
+    public Label(String label, String lang) {
+        this.label = label;
+        this.lang = lang;
+    }
+
+    public Label() {
+    }
+
     public String getLang() {
         return lang;
     }
