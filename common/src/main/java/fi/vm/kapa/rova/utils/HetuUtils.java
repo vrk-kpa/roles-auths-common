@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,6 @@ public final class HetuUtils {
     private static final String CHECKSUM_CHARACTERS = "0123456789ABCDEFHJKLMNPRSTUVWXY";
     private static volatile Map<Character, Integer> invertedSeparators = new HashMap<Character, Integer>();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
 
     static {
         invertedSeparators.put('+', 18);
@@ -180,6 +180,52 @@ public final class HetuUtils {
             return Period.between(LocalDate.parse(fullLengthBirthDate, DateTimeFormatter.ISO_LOCAL_DATE), LocalDate.now()).getYears() >= 18;
         } catch (final DateTimeParseException ignored) {
             return false;
+        }
+    }
+
+    public static String convertHetuToBirth(String hetu) {
+        boolean success = false;
+        Calendar cal = Calendar.getInstance();
+
+        if (hetu != null && hetu.trim().length() == 11) {
+            int day = 0, month = 0, year = 0;
+            try {
+                day = Integer.parseInt(hetu.substring(0, 2));
+                month = Integer.parseInt(hetu.substring(2, 4));
+                year = Integer.parseInt(hetu.substring(4, 6));
+                success = true;
+            } catch (Exception e) {
+                // mandateDTO.setDelegateBirth("N/A");
+            }
+
+            if (success) {
+                cal.set(Calendar.DAY_OF_MONTH, day);
+                cal.set(Calendar.MONTH, month - 1);
+                switch (hetu.charAt(6)) {
+                case '+':
+                    cal.set(Calendar.YEAR, 1800 + year);
+                    break;
+                case '-':
+                    cal.set(Calendar.YEAR, 1900 + year);
+                    break;
+                case 'A':
+                    cal.set(Calendar.YEAR, 2000 + year);
+                    break;
+                case 'B':
+                    cal.set(Calendar.YEAR, 2100 + year);
+                    break;
+                default:
+                    success = false;
+                    break;
+                }
+            }
+        } // delegateId.trim().length() == 11
+
+        if (success) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            return sdf.format(cal.getTime());
+        } else {
+            return "N/A";
         }
     }
 

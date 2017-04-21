@@ -59,4 +59,10 @@ public class DateUtils {
     public static String format(Date date) {
         return date != null ? new SimpleDateFormat("yyyy-MM-dd HH.mm.ss").format(date) : null;
     }
+
+    public static Date getCurrentFinnishDate() {
+        Calendar currentMoment = Calendar.getInstance();
+        currentMoment.setTimeZone(FINNISH_TIMEZONE);
+        return currentMoment.getTime();
+    }
 }
