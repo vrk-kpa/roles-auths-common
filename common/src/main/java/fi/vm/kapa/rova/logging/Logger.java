@@ -62,6 +62,7 @@ public final class Logger {
         ORGANIZATION_NAME("organization_name"),
         ORGANIZATION_ID("organization_id"),
         ORGANIZATION_ROLES("organization_roles"),
+        MANDATE_TYPE("mandate_type"),
         REASONS("reasons"), // lista kieltoperusteista jos määritelty serviceen
         REQUEST_ID("ReqID"), // kutsuketjun tunnisteena käytetty id
         RESULT("result"), // allowed/disallowed-tulos
