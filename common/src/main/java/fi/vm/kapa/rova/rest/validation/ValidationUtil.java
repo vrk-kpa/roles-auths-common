@@ -51,16 +51,10 @@ public class ValidationUtil {
     
     private String apiKey;
     private long requestAliveMillis;
-    private String pathPrefix; // url prefix, for client side
 
-    public ValidationUtil(String apiKey, int requestAliveSeconds, String pathPrefix) {
+    public ValidationUtil(String apiKey, int requestAliveSeconds) {
         this.apiKey = apiKey;
         this.requestAliveMillis = requestAliveSeconds * 1000;
-        this.pathPrefix = pathPrefix == null ? "" : pathPrefix;
-    }
-    
-    public ValidationUtil(String apiKey, int requestAliveSeconds) {
-        this(apiKey, requestAliveSeconds, null);
     }
 
     /**
@@ -156,7 +150,7 @@ public class ValidationUtil {
             context.setEntityStream(new ByteArrayInputStream(entity));
         }
         String path = getPathWithParams(context.getUriInfo());
-        String data = pathPrefix + "/" + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
+        String data = path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
         return matches(hash, data, apiKey);
     }
 
@@ -181,7 +175,7 @@ public class ValidationUtil {
         }
 
         String path = getPathWithParams(request);
-        String data = pathPrefix  + path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
+        String data = path + timestamp + (entity != null ? new String(entity, "UTF-8") : "");
         return matches(hash, data, apiKey);
     }
 

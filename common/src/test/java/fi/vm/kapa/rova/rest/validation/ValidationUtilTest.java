@@ -44,16 +44,15 @@ import static org.junit.Assert.*;
 public class ValidationUtilTest {
 
     private static final String TEST_KEY = "testkey";
-    private static final String PREFIX = "/rest";
     private static final String URL_INFO_PATH = "service";
     private static final String PATH_PARAM = "123456+9999";
-    private static final String BASE_URI = "http://example.com" + PREFIX + "/";
-    private static final String URL = "http://example.com" + PREFIX + "/" + URL_INFO_PATH;
+    private static final String BASE_URI = "http://example.com" + "/";
+    private static final String URL = "http://example.com" + "/" + URL_INFO_PATH;
     private static final String PARAMS = "?param1=test&param2=testtest";
     private static final String ENTITY = "{\"name\":\"John Doe\",\"id\":3}";
     private static final String URL_WITH_PARAMS = URL + PARAMS;
 
-    private ValidationUtil validationUtil = new ValidationUtil(TEST_KEY, 2, PREFIX);
+    private ValidationUtil validationUtil = new ValidationUtil(TEST_KEY, 2);
 
     private class TestEntity {
         @SuppressWarnings("unused")
@@ -290,8 +289,6 @@ public class ValidationUtilTest {
 
     private String getHash(String timestamp, boolean includePathParam, boolean includeParams) throws IOException {
         StringBuilder data = new StringBuilder();
-        data.append(PREFIX);
-        data.append("/");
         data.append(URL_INFO_PATH);
         if (includePathParam) {
             data.append("/");

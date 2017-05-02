@@ -40,8 +40,8 @@ public class RequestValidationFilter implements Filter {
 
     private ValidationUtil validationUtil;
 
-    public RequestValidationFilter(String apiKey, int requestAliveSeconds, String pathPrefix) {
-        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds, pathPrefix);
+    public RequestValidationFilter(String apiKey, int requestAliveSeconds) {
+        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds);
     }
 
     @Override

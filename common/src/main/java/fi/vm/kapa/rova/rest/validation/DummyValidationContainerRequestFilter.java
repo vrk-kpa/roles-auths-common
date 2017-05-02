@@ -31,8 +31,8 @@ public class DummyValidationContainerRequestFilter implements ContainerRequestFi
 
     private ValidationUtil validationUtil;
 
-    public DummyValidationContainerRequestFilter(String apiKey, int requestAliveSeconds, String pathPrefix) {
-        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds, pathPrefix);
+    public DummyValidationContainerRequestFilter(String apiKey, int requestAliveSeconds) {
+        validationUtil = new ValidationUtil(apiKey, requestAliveSeconds);
     }
 
     @Override
