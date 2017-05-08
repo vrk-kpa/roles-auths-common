@@ -57,7 +57,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SystemException.class)
     protected ResponseEntity<Object> systemException(SystemException e, WebRequest request) {
-        LOG.error("SystemException: " + e.toString());
+        LOG.error("SystemException: " + e.toString(), e);
         return handleExceptionInternal(e, buildEntity(e, e.getCodeNumber()), getJsonHeader(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
@@ -81,7 +81,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     protected ResponseEntity<Object> nullPointerException(NullPointerException e, WebRequest request) {
-        LOG.error("NullPointerException: " + e.toString());
+        LOG.error("NullPointerException: " + e.toString(), e);
         return handleExceptionInternal(e, buildEntity(e), getJsonHeader(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
