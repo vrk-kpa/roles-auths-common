@@ -26,8 +26,12 @@ package fi.vm.kapa.rova.help;
  * Created by mtom on 12/5/16.
  */
 public class HelpDocument {
+
     private String title;
     private String body;
+
+    public HelpDocument() {
+    }
 
     public HelpDocument(String title, String body) {
         this.title = title;
