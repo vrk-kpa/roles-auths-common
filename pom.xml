@@ -34,7 +34,8 @@
     <properties>
         <io.spring.platform-version>Athens-SR3</io.spring.platform-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <docker.image.prefix>docker-registry.kapa.ware.fi</docker.image.prefix>
+        <docker.serverId>vrk-artifactory-01.eden.csc.fi</docker.serverId>
+        <docker.image.prefix>roles-auths-docker-virtual.vrk-artifactory-01.eden.csc.fi</docker.image.prefix>
         <spotify-docker.version>0.3.1</spotify-docker.version>
         <docker.image.tag>latest</docker.image.tag>
         <jenkins.build.tag>latest</jenkins.build.tag>
@@ -48,7 +49,7 @@
         <snapshotRepository>
             <id>vrk-ci</id>
             <name>vrk-ci-snapshots</name>
-            <url>https://ci.kapa.ware.fi/artifactory/jenkins-snapshot-local</url>
+            <url>https://vrk-artifactory-01.eden.csc.fi:443/maven-virtual</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -370,6 +371,8 @@
                     <configuration>
                         <imageName>${docker.image.prefix}/${project.artifactId}:${docker.image.tag}</imageName>
                         <dockerDirectory>.</dockerDirectory>
+                        <serverId>${docker.serverId}</serverId>
+                        <useConfigFile>true</useConfigFile>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -432,7 +435,7 @@
                                 <npmVersion>3.10.3</npmVersion>
                             </configuration>
                         </execution>
-            
+
                         <execution>
                             <id>npm install</id>
                             <goals>
@@ -442,7 +445,7 @@
                                 <arguments>install</arguments>
                             </configuration>
                         </execution>
-            
+
                         <execution>
                             <id>npm run build</id>
                             <goals>
