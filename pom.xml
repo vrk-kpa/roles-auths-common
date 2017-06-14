@@ -205,6 +205,12 @@
                 <version>4.0.3</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.sun.xml.security</groupId>
+                <artifactId>xml-security-impl</artifactId>
+                <version>1.0</version>
+            </dependency>
+
             <!-- database deps -->
             <dependency>
                 <groupId>org.postgresql</groupId>
