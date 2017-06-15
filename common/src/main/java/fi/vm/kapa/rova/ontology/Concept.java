@@ -34,6 +34,8 @@ public class Concept {
     private Set<String> conceptMatches = new HashSet<>();
     private Set<Label> labels = new HashSet<>();
     private Set<Label> definitions = new HashSet<>();
+    private boolean active;
+    private String principal;
 
     public Concept() {
         // NOP
@@ -92,5 +94,21 @@ public class Concept {
 
     public void setNarrowerConcepts(Set<String> narrowerConcepts) {
         this.narrowerConcepts = narrowerConcepts;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
     }
 }
