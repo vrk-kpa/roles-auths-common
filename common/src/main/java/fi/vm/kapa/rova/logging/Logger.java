@@ -83,7 +83,8 @@ public final class Logger {
         SOCIAL_SECURITY_NUMBER("social_security_number"),//hetu
         PERSON_FIRSTNAMES("person_firstnames"),
         AUTHENTICATION_ASSERTION("authentication_assertion"),
-        PERSON_LASTNAME("person_lastname");
+        PERSON_LASTNAME("person_lastname"),
+        ENTITY_ID("entity_id"); // EntityId in Karva request
 
         private String value;
         Field(String value) {
