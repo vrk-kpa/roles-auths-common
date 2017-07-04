@@ -84,7 +84,7 @@ public final class Logger {
         PERSON_FIRSTNAMES("person_firstnames"),
         AUTHENTICATION_ASSERTION("authentication_assertion"),
         PERSON_LASTNAME("person_lastname"),
-        ENTITY_ID("entity_id"); // EntityId in Karva request
+        KATSO_ENTITY_ID("katso_entity_id"); // EntityId in Karva request
 
         private String value;
         Field(String value) {
