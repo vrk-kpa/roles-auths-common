@@ -34,6 +34,7 @@ public class Concept {
     private Set<String> conceptMatches = new HashSet<>();
     private Set<Label> labels = new HashSet<>();
     private Set<Label> definitions = new HashSet<>();
+    private Set<KatsoRolesMandateProvision> katsoRoleSets = new HashSet<>();
     private boolean active;
     private String principal;
 
@@ -80,6 +81,7 @@ public class Concept {
     public void setLabels(Set<Label> labels) {
         this.labels = labels;
     }
+
     public Set<Label> getDefinitions() {
         return definitions;
     }
@@ -94,6 +96,14 @@ public class Concept {
 
     public void setNarrowerConcepts(Set<String> narrowerConcepts) {
         this.narrowerConcepts = narrowerConcepts;
+    }
+
+    public Set<KatsoRolesMandateProvision> getKatsoRoleSets() {
+        return katsoRoleSets;
+    }
+
+    public void setKatsoRoleSets(Set<KatsoRolesMandateProvision> katsoRoleSets) {
+        this.katsoRoleSets = katsoRoleSets;
     }
 
     public boolean isActive() {
