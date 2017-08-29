@@ -31,7 +31,12 @@ public class ContentSecurityPolicyFilter  extends HeadersAddingFilter {
 
     private static final Map<String, String> DEFAULT_HEADERS = new HashMap<>();
     static {
-        DEFAULT_HEADERS.put("Content-Security-Policy", "default-src 'none' style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval';");
+        DEFAULT_HEADERS.put("Content-Security-Policy", "default-src 'none'; " +
+				"connect-src 'self'; " +
+				"style-src 'unsafe-inline' 'self'; " +
+				"font-src 'self'; " +
+				"img-src 'self'; " +
+				"script-src 'unsafe-inline' 'unsafe-eval' 'self';");
     }
 
     public ContentSecurityPolicyFilter(Predicate<HttpServletRequest> matcher, Map<String, String> headers) {
