@@ -23,9 +23,21 @@
 package fi.vm.kapa.rova.spring.profiles;
 
 public final class SpringProfiles {
-    public static final String PROD = "default";
-    public static final String TEST = "itest";
-    public static final String DEV = "dev";
+	public static final String PROD = "default";
+	public static final String TEST = "itest";
+	public static final String DEMO = "demo";
+	public static final String DEV = "dev";
+	public static final String DUMMY_AUTH = "dummyAuth";
+	public static final String JWT = "jwt";
+	public static final String QA = "qa";
+
+	public static final String NOT_PROD = "!default";
+	public static final String NOT_TEST = "!itest";
+	public static final String NOT_DEMO = "!demo";
+	public static final String NOT_DEV = "!dev";
+	public static final String NOT_DUMMY_AUTH = "!dummyAuth";
+	public static final String NOT_JWT = "!jwt";
+	public static final String NOT_QA = "!qa";
 
     private SpringProfiles() {
     }
