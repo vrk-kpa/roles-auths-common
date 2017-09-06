@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 public abstract class StatelessCSRFFilter extends OncePerRequestFilter {
 
-    private static final String CSRF_TOKEN = "CSRF-TOKEN";
+    private static final String CSRF_TOKEN = "ROVA-CSRF-TOKEN";
     private static final String X_CSRF_HEADER_TOKEN = "X-CSRF-TOKEN";
     private static final String X_CSRF_URI_TOKEN = "xcsrf";
     private static final Pattern ALLOWED_METHODS = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
