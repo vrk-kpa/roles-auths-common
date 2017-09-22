@@ -34,6 +34,7 @@ public enum ExceptionType implements ErrorCode {
     ILLEGAL_RULE_CONFIG(108),
     DUPLICATE_USER_IDENTITY(109),
     INVALID_WEB_API_REDIRECT_URL(110),
+    SAVING_KATSO_ENTITYID_NOT_ALLOWED(111),
     OTHER_EXCEPTION(199);
 
     int number;
