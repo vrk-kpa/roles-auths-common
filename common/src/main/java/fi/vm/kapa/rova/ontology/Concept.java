@@ -36,7 +36,8 @@ public class Concept {
     private Set<Label> definitions = new HashSet<>();
     private Set<KatsoRolesMandateProvision> katsoRoleSets = new HashSet<>();
     private boolean active;
-    private String principal;
+    private boolean principalCompany;
+    private boolean principalPerson;
 
     public Concept() {
         // NOP
@@ -114,11 +115,20 @@ public class Concept {
         this.active = active;
     }
 
-    public String getPrincipal() {
-        return principal;
+    public boolean isPrincipalCompany() {
+        return principalCompany;
     }
 
-    public void setPrincipal(String principal) {
-        this.principal = principal;
+    public void setPrincipalCompany(boolean principalCompany) {
+        this.principalCompany = principalCompany;
     }
+
+    public boolean isPrincipalPerson() {
+        return principalPerson;
+    }
+
+    public void setPrincipalPerson(boolean principalPerson) {
+        this.principalPerson = principalPerson;
+    }
+
 }
