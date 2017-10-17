@@ -23,6 +23,9 @@
 package fi.vm.kapa.rova.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -64,5 +67,16 @@ public class DateUtils {
         Calendar currentMoment = Calendar.getInstance();
         currentMoment.setTimeZone(FINNISH_TIMEZONE);
         return currentMoment.getTime();
+    }
+    
+    public static boolean isCurrentDay(Date d) {
+        ZoneId zone = ZoneId.of("Europe/Helsinki");
+        ZonedDateTime now = Instant.now().atZone(zone);
+        ZonedDateTime date = ZonedDateTime.ofInstant(d.toInstant(), zone);
+        
+        if (now.getYear() == date.getYear() && now.getDayOfYear() == date.getDayOfYear()) {
+            return true;
+        }
+        return false;
     }
 }
