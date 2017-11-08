@@ -34,6 +34,9 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Disables default actuator configuration and enables only /info -endpoint.
+ */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ActuatorEndpointConfigurator implements InitializingBean {

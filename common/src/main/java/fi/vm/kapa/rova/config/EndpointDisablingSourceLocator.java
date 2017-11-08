@@ -35,6 +35,9 @@ import org.springframework.core.env.PropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Disables Spring Cloud configuration specific endpoints by adding a new property source locator.
+ */
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class EndpointDisablingSourceLocator implements PropertySourceLocator {
