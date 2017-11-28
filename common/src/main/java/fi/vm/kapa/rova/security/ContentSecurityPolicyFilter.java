@@ -27,13 +27,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class ContentSecurityPolicyFilter  extends HeadersAddingFilter {
+public class ContentSecurityPolicyFilter extends HeadersAddingFilter {
 
     private static final Map<String, String> DEFAULT_HEADERS = new HashMap<>();
     static {
         DEFAULT_HEADERS.put("Content-Security-Policy", "default-src 'self'; " +
-				"style-src 'self' 'unsafe-inline'; " +
-				"script-src 'self' 'unsafe-inline' 'unsafe-eval';");
+                "style-src 'self' 'unsafe-inline'; " +
+                "script-src 'self' 'unsafe-inline' 'unsafe-eval';");
     }
 
     public ContentSecurityPolicyFilter(Predicate<HttpServletRequest> matcher, Map<String, String> headers) {

@@ -44,9 +44,9 @@ public class HeadersAddingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        if(matcher.test(httpRequest)) {
+        if (matcher.test(httpRequest)) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-            for(String key: headers.keySet()) {
+            for (String key: headers.keySet()) {
                 httpResponse.setHeader(key, headers.get(key));
             }
         }
