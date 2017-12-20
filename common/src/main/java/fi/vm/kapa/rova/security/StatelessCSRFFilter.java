@@ -53,7 +53,7 @@ public abstract class StatelessCSRFFilter extends OncePerRequestFilter {
             String csrfCookieValue = null;
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(CSRF_TOKEN)) {
+                    if (cookie.getName().equals(csrfTokenName())) {
                         csrfCookieValue = cookie.getValue();
                         break;
                     }
@@ -94,4 +94,9 @@ public abstract class StatelessCSRFFilter extends OncePerRequestFilter {
     private boolean requestMatches(HttpServletRequest request) {
         return !ALLOWED_METHODS.matcher(request.getMethod()).matches();
     }
+
+    protected String csrfTokenName() {
+        return CSRF_TOKEN;
+    }
+
 }
